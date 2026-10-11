@@ -1,15 +1,38 @@
-# macOS i dysk zewnętrzny
+# W repozytorium trzymamy tylko kod strony (HTML/CSS/JS + assets).
+
+# pliki Claude i notatki robocze
+.claude/
+CLAUDE.md
+PLAN.md
+SKILL.md
+readme.md
+
+# design system (eksport z narzędzia projektowego, strona tego nie używa)
+_adherence.oxlintrc.json
+_ds_bundle.js
+_ds_manifest.json
+components/
+guidelines/
+
+# materiały robocze, nie publikujemy
+uploads/
+check/
+prototypes/
+
+# macOS / Windows
 .DS_Store
 ._*
 .Spotlight-V100
 .Trashes
 .fseventsd
+Thumbs.db
+desktop.ini
 
 # edytory
 .vscode/
 .idea/
 
-# zależności i build (po przejściu na Astro)
+# zależności i build
 node_modules/
 dist/
 .astro/
@@ -18,8 +41,3 @@ dist/
 .env
 .env.*
 !.env.example
-
-# materiały robocze, nie publikujemy
-uploads/
-check/
-.claude/
