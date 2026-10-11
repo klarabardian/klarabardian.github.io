@@ -1,0 +1,25 @@
+# macOS i dysk zewnętrzny
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+# edytory
+.vscode/
+.idea/
+
+# zależności i build (po przejściu na Astro)
+node_modules/
+dist/
+.astro/
+
+# lokalne
+.env
+.env.*
+!.env.example
+
+# materiały robocze, nie publikujemy
+uploads/
+check/
+.claude/

@@ -1,0 +1,110 @@
+/* ============================================================
+   TYPOGRAFIA  ·  style tekstu
+   ------------------------------------------------------------
+   Tu są zdefiniowane wszystkie style tekstowe ze stylebooka.
+   Każdy styl ma swoją "klasę" (np. .t-logo, .t-headline),
+   którą wystarczy dopisać do elementu HTML, np.:
+       <h1 class="t-logo">ZUZANNA KLARA BARDIAN</h1>
+   Rozmiary są w jednostce rem (1rem = 16px). Zostawione w rem,
+   żeby cała strona dobrze się skalowała.
+   ============================================================ */
+
+:root {
+  --font-family: "Figtree", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* grubości (Figtree variable) */
+  --weight-medium: 500;
+  --weight-bold: 700;
+  --weight-black: 900;
+
+  /* skala rozmiarów (px → rem) */
+  /* logo/wordmark — szerokość dopasowana do zdjęcia w bio.
+     Zdjęcie zajmuje pół kontenera; ta sama szerokość po podzieleniu przez
+     ~12.52 (szerokość napisu przy foncie 1px) daje wielkość fontu.
+     Na desktopie ≈ 43px (napis ≈ szerokość zdjęcia ≈ 544px). */
+  --size-logo: clamp(1.25rem, calc((min(100vw, 1280px) - 192px) / 25.04), 2.75rem);
+  --size-headline: 1.5rem; /* 24px — nagłówki sekcji */
+  --size-large: 1.25rem;   /* 20px — tekst duży (bio, opisy prac) */
+  --size-body: 1rem;       /* 16px — tekst podstawowy i menu */
+
+  --leading-tight: 1.1;    /* interlinia logo */
+  --leading-body: 1.45;    /* interlinia tekstu */
+}
+
+/* domyślne ustawienia tekstu dla całej strony */
+body {
+  font-family: var(--font-family);
+  font-weight: var(--weight-medium);
+  font-size: var(--size-body);
+  line-height: var(--leading-body);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* LOGO — czarne, WERSALIKI, Bold 56, light-spacing -3% */
+.t-logo {
+  font-weight: var(--weight-bold);
+  font-size: var(--size-logo);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* MENU — czarne, Medium 16 */
+.t-menu {
+  font-weight: var(--weight-medium);
+  font-size: var(--size-body);
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+
+/* MENU CHOOSE — fiolet, Black 16 (pozycja aktywna lub :hover) */
+.t-menu-choose,
+.t-menu.is-active,
+.t-menu:hover {
+  font-weight: var(--weight-black);
+  color: var(--accent);
+}
+
+/* TEXT — czarny, Medium 16 (akapit podstawowy) */
+.t-text {
+  font-weight: var(--weight-medium);
+  font-size: var(--size-body);
+  line-height: var(--leading-body);
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+
+/* TEXT LARGE — czarny, Medium 20 (bio, opisy projektów) */
+.t-text-large {
+  font-weight: var(--weight-medium);
+  font-size: var(--size-large);
+  line-height: var(--leading-body);
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+
+/* HEADLINE — czarny, WERSALIKI, Bold 24 (tytuły sekcji w bio) */
+.t-headline {
+  font-weight: var(--weight-bold);
+  font-size: var(--size-headline);
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* TEXT LIST — czarny, lista wypunktowana kropkami */
+.t-list {
+  font-weight: var(--weight-medium);
+  font-size: var(--size-body);
+  line-height: var(--leading-body);
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  list-style: disc;
+  padding-left: 1.1em;
+  margin: 0;
+}
+.t-list li { margin-bottom: 0.35em; }

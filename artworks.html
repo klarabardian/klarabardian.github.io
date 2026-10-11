@@ -1,0 +1,33 @@
+<!-- @dsCard group="Portfolio" viewport="1280x900" name="Art works (kafelki)" subtitle="Siatka prac w stylu Pinterest, 3 kolumny" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>art works · Zuzanna Klara Bardian</title>
+  <!-- jeden plik ze stylami — wczytuje wszystkie pozostałe -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Pasek nawigacji zostanie zbudowany automatycznie przez site.js -->
+  <header id="navbar"></header>
+
+  <!-- Treść strony: siatka kafelków -->
+  <main class="page">
+    <div class="container">
+      <div id="grid"></div>
+    </div>
+  </main>
+
+  <!-- Stopka budowana automatycznie -->
+  <footer id="footer"></footer>
+
+  <!-- Skrypty: najpierw dane, potem logika, na końcu uruchomienie strony -->
+  <script src="data.js"></script>
+  <script src="site.js"></script>
+  <script>
+    // Zbuduj stronę "art works": podświetl zakładkę i pokaż prace z listy ARTWORKS
+    initListPage("nav_artworks", ARTWORKS);
+  </script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+{
+  "plugins": [
+    "react",
+    "import"
+  ],
+  "rules": {
+    "react/forbid-elements": [
+      "warn",
+      {
+        "forbid": []
+      }
+    ],
+    "no-restricted-imports": [
+      "warn",
+      {
+        "patterns": [
+          {
+            "group": [
+              "components/core/**",
+              "data.js",
+              "home.js",
+              "site.js"
+            ],
+            "message": "Import design-system components from 'index.js', not component internals."
+          }
+        ]
+      }
+    ],
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "Literal[value=/#[0-9a-fA-F]{3,8}\\b/]",
+        "message": "Raw hex color — use a design-system color token via var()."
+      },
+      {
+        "selector": "Literal[value=/\\b\\d+px\\b/]",
+        "message": "Raw px value — use a design-system spacing token via var()."
+      },
+      {
+        "selector": "Literal[value=/font-family\\s*:\\s*(?!['\\\"]?(?:Figtree))/i]",
+        "message": "Font not provided by the design system. Available: Figtree."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ArtworkTile'] > JSXAttribute > JSXIdentifier[name!=/^(?:id|image|title|kind|year|placeholder|soonTitle|soonSub|key|ref|className|style|children)$/]",
+        "message": "<ArtworkTile> doesn't accept that prop. Declared props: id, image, title, kind, year, placeholder, soonTitle, soonSub."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Footer'] > JSXAttribute > JSXIdentifier[name!=/^(?:copyright|email|instagram|youtube|linkedin|key|ref|className|style|children)$/]",
+        "message": "<Footer> doesn't accept that prop. Declared props: copyright, email, instagram, youtube, linkedin."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='NavBar'] > JSXAttribute > JSXIdentifier[name!=/^(?:active|lang|labels|key|ref|className|style|children)$/]",
+        "message": "<NavBar> doesn't accept that prop. Declared props: active, lang, labels."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='NavBar'] > JSXAttribute[name.name='active'] > Literal[value!=/^(?:bio|artworks|videos|games)$/]",
+        "message": "<NavBar> active must be one of 'bio' | 'artworks' | 'videos' | 'games'."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='NavBar'] > JSXAttribute[name.name='lang'] > Literal[value!=/^(?:en|pl)$/]",
+        "message": "<NavBar> lang must be one of 'en' | 'pl'."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/index.js"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ],
+  "x-omelette": {
+    "components": {
+      "ArtworkTile": {
+        "replaces": []
+      },
+      "Footer": {
+        "replaces": []
+      },
+      "NavBar": {
+        "replaces": []
+      }
+    },
+    "tokens": [
+      "--accent",
+      "--bg-home",
+      "--bg-page",
+      "--color-black",
+      "--color-cream",
+      "--color-off-white",
+      "--color-violet",
+      "--color-white",
+      "--content-max",
+      "--font-family",
+      "--grid-columns",
+      "--grid-gap",
+      "--hairline",
+      "--ink",
+      "--ink-on-dark",
+      "--leading-body",
+      "--leading-tight",
+      "--nav-height",
+      "--page-margin",
+      "--radius-img",
+      "--radius-none",
+      "--size-body",
+      "--size-headline",
+      "--size-large",
+      "--size-logo",
+      "--space-lg",
+      "--space-md",
+      "--space-sm",
+      "--space-xl",
+      "--space-xs",
+      "--weight-black",
+      "--weight-bold",
+      "--weight-medium"
+    ],
+    "tokenKinds": {
+      "--color-black": "color",
+      "--color-white": "color",
+      "--color-off-white": "color",
+      "--color-cream": "color",
+      "--color-violet": "color",
+      "--bg-page": "color",
+      "--bg-home": "color",
+      "--ink": "color",
+      "--ink-on-dark": "color",
+      "--accent": "color",
+      "--hairline": "color",
+      "--font-family": "font",
+      "--weight-medium": "font",
+      "--weight-bold": "font",
+      "--weight-black": "font",
+      "--size-logo": "spacing",
+      "--size-headline": "spacing",
+      "--size-large": "spacing",
+      "--size-body": "spacing",
+      "--leading-tight": "font",
+      "--leading-body": "font",
+      "--grid-columns": "other",
+      "--grid-gap": "spacing",
+      "--page-margin": "spacing",
+      "--content-max": "spacing",
+      "--nav-height": "spacing",
+      "--space-xs": "spacing",
+      "--space-sm": "spacing",
+      "--space-md": "spacing",
+      "--space-lg": "spacing",
+      "--space-xl": "spacing",
+      "--radius-none": "radius",
+      "--radius-img": "radius"
+    },
+    "fontFamilies": [
+      "Figtree"
+    ]
+  }
+}

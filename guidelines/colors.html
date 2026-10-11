@@ -1,0 +1,25 @@
+<!-- @dsCard group="Colors" viewport="700x190" name="Paleta" subtitle="Tła, tekst i kolor akcentu" -->
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body { margin: 0; padding: 22px; background: #fff; }
+    .row { display: flex; gap: 14px; }
+    .sw { flex: 1; }
+    .chip { height: 78px; border-radius: 4px; border: 1px solid rgba(0,0,0,.08); }
+    .name { font-weight: 700; font-size: 13px; margin-top: 8px; }
+    .hex { font-size: 12px; color: #666; letter-spacing: .02em; }
+  </style>
+</head>
+<body>
+  <div class="row">
+    <div class="sw"><div class="chip" style="background:var(--color-off-white)"></div><div class="name">Tło stron</div><div class="hex">#FDFDFD</div></div>
+    <div class="sw"><div class="chip" style="background:var(--color-cream)"></div><div class="name">Tło HOME</div><div class="hex">#FFFFE3</div></div>
+    <div class="sw"><div class="chip" style="background:var(--color-black)"></div><div class="name">Tekst</div><div class="hex">#000000</div></div>
+    <div class="sw"><div class="chip" style="background:var(--color-violet)"></div><div class="name">Akcent</div><div class="hex">#7F5A83</div></div>
+    <div class="sw"><div class="chip" style="background:var(--color-white)"></div><div class="name">Biel</div><div class="hex">#FFFFFF</div></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,379 @@
+/* ===================================================================
+   site.css  ·  STYLE KOMPONENTÓW STRONY
+   -------------------------------------------------------------------
+   Wygląd nawigacji, kafelków (jak Pinterest), stopki, strony bio
+   i podstron projektów. Kolory/odstępy biorą się ze zmiennych
+   zdefiniowanych w tokens/. Tu opisujemy "jak to ułożyć".
+   =================================================================== */
+
+/* --- podstawowy reset: zerujemy domyślne marginesy przeglądarki --- */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg-page);
+  min-height: 100vh;
+  display: flex;            /* układ pionowy: nav / treść / stopka */
+  flex-direction: column;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+/* ===================================================================
+   PASEK NAWIGACJI (góra strony, nieruchomy)
+   =================================================================== */
+.navbar {
+  position: fixed;          /* zawsze na górze, nie scrolluje się */
+  top: 0; left: 0; right: 0;
+  z-index: 100;             /* nad treścią — treść "chowa się" pod spodem */
+  height: var(--nav-height);
+  background: var(--bg-page);/* prostokąt w kolorze tła = zasłania treść */
+  display: flex;
+  align-items: center;
+}
+.navbar__inner {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--page-margin);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(10px, 2vw, 32px);
+}
+/* logo w pasku — niewielkie, mieści się w jednej linii obok menu */
+.navbar__logo {
+  font-weight: var(--weight-bold);
+  font-size: clamp(1rem, 2.2vw, 1.5rem); /* ~16px → 24px */
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink);
+}
+/* logo jako plik wektorowy (gdy SITE.logo = { image: "..." }) */
+.logo-img { display: block; width: auto; height: auto; max-width: 100%; }
+/* grupa linków po prawej */
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.5vw, 28px);
+}
+/* pojedynczy link menu — płynne pogrubienie BEZ przesuwania sąsiadów.
+   Sztuczka: ukryty "duch" (::after) z tym samym tekstem w grubości Black
+   rezerwuje z góry szerokość pogrubionej wersji, więc słowo tylko grubieje
+   w miejscu (wyśrodkowane), a reszta menu się nie rusza. */
+.nav-link {
+  display: inline-grid;
+  justify-items: center;        /* tekst wyśrodkowany w zarezerwowanym polu */
+  font-size: var(--size-body);
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  white-space: nowrap;
+  cursor: pointer;
+  font-variation-settings: "wght" 500;
+  transition: color .35s ease, font-variation-settings .35s ease; /* płynne */
+}
+.nav-link::after {
+  content: attr(data-text);     /* ten sam napis, ale na sztywno w Black */
+  font-variation-settings: "wght" 900;
+  font-weight: 900;
+  height: 0;                    /* nie zajmuje wysokości — tylko szerokość */
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+.nav-link:hover,
+.nav-link.is-active { color: var(--accent); font-variation-settings: "wght" 900; }
+
+/* przełącznik języka EN | PL — ta sama sztuczka z "duchem", żeby aktywny
+   wariant w grubości Black nie przesuwał drugiego */
+.lang-switch { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.lang-switch .sep { color: var(--ink); opacity: .4; }
+.lang-opt {
+  display: inline-grid;
+  justify-items: center;
+  color: var(--ink);
+  cursor: pointer;
+  font-variation-settings: "wght" 500;
+  transition: color .35s ease, font-variation-settings .35s ease;
+}
+.lang-opt::after {
+  content: attr(data-text);
+  font-variation-settings: "wght" 900;
+  font-weight: 900;
+  height: 0; overflow: hidden; visibility: hidden; pointer-events: none;
+}
+.lang-opt:hover { color: var(--accent); }
+.lang-opt.is-active { color: var(--accent); font-variation-settings: "wght" 900; }
+
+/* odsuwamy treść strony spod nieruchomego paska (oprócz HOME) */
+.page {
+  flex: 1 0 auto;
+  padding-top: calc(var(--nav-height) + var(--space-lg));
+  padding-bottom: var(--space-xl);
+}
+
+/* ===================================================================
+   KAFELKI W STYLU PINTEREST (masonry — różne wysokości, 3 kolumny)
+   Robimy to przez CSS "columns" — najlżejszy sposób na taki układ.
+   =================================================================== */
+.masonry {
+  column-count: 3;                 /* 3 kolumny na desktopie */
+  column-gap: var(--grid-gap);     /* odstęp = gutter z siatki */
+}
+.tile {
+  break-inside: avoid;             /* nie tnij kafelka między kolumnami */
+  margin-bottom: var(--space-md);
+  display: block;
+  cursor: pointer;
+}
+.tile__imgwrap {
+  position: relative;                /* kotwica dla podpisu fotografa */
+  overflow: hidden;                /* przycina powiększone zdjęcie przy hover */
+  border-radius: var(--radius-img);
+  background: #f0f0ec;             /* delikatne tło zanim wczyta się zdjęcie */
+}
+/* kafelek pracy bez zdjęcia okładki — kremowy blok z samym tytułem */
+.tile__imgwrap--empty {
+  aspect-ratio: 3 / 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-home);
+  color: var(--accent);
+  text-align: center;
+  padding: var(--space-md);
+}
+.tile__emptytitle { font-weight: var(--weight-bold); font-size: var(--size-large); line-height: 1.2; }
+.tile__img {
+  width: 100%;
+  height: auto;
+  transition: transform .6s cubic-bezier(.2,.7,.2,1); /* płynne powiększenie */
+}
+.tile:hover .tile__img { transform: scale(1.04); }    /* delikatne powiększenie */
+.tile__caption {
+  margin-top: 10px;
+  font-size: var(--size-body);
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+.tile__title { font-weight: var(--weight-bold); }     /* tytuł pogrubiony */
+.tile__meta  { font-weight: var(--weight-medium); }   /* | rodzaj | rok */
+
+/* kafelek-zapowiedź (placeholder, bez zdjęcia) */
+.tile--soon .tile__imgwrap {
+  aspect-ratio: 3 / 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--bg-home);       /* kremowy blok */
+  color: var(--accent);
+  text-align: center;
+  padding: var(--space-md);
+}
+.tile--soon .soon-title { font-weight: var(--weight-black); }
+.tile--soon .soon-sub { font-size: var(--size-body); color: var(--ink); opacity: .55; }
+
+/* ===================================================================
+   PODPIS FOTOGRAFA — pojawia się po najechaniu kursorem na zdjęcie
+   ("fot. Imię Nazwisko" / "photo by Name Surname"). Tekst zmienisz
+   w data.js — pole "photo" przy zdjęciu; prefiks w I18N (photo_by).
+   =================================================================== */
+figure.photo { position: relative; margin: 0; }
+.photo > img { display: block; width: 100%; height: auto; border-radius: var(--radius-img); }
+.photo-credit {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 12px 16px;
+  background: linear-gradient(to top, rgba(0, 0, 0, .6), rgba(0, 0, 0, 0));
+  color: var(--color-cream);
+  font-size: var(--size-body);
+  opacity: 0;
+  transition: opacity .3s ease;
+  pointer-events: none;
+  border-radius: 0 0 var(--radius-img) var(--radius-img);
+}
+.tile__imgwrap.has-credit:hover .photo-credit,
+.photo.has-credit:hover .photo-credit { opacity: 1; }
+
+/* ===================================================================
+   STRONA BIO
+   =================================================================== */
+.bio-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;   /* zdjęcie | tekst */
+  gap: var(--space-lg);
+  align-items: center;              /* tekst wyśrodkowany względem wysokości zdjęcia */
+}
+.bio-photo { width: 100%; height: auto; border-radius: var(--radius-img); }
+.bio-text { white-space: pre-line; } /* zachowuje przejścia do nowej linii z data.js */
+
+/* trzy kolumny: wystawy / festiwale / nagrody */
+.bio-columns {
+  margin-top: var(--space-xl);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+.bio-col h2 { margin: 0 0 var(--space-sm); }
+.bio-education { margin-top: var(--space-xl); }
+.bio-education h2 { margin: 0 0 var(--space-sm); }
+.bio-contact { margin-top: var(--space-lg); }
+.bio-contact a { font-weight: var(--weight-bold); }
+.bio-contact a:hover { color: var(--accent); }
+
+/* ===================================================================
+   PODSTRONA PROJEKTU (artwork site)
+   =================================================================== */
+.work { max-width: 1000px; margin-inline: auto; }
+.work__hero { width: 100%; margin: 0 0 0; }
+.work__hero > img { width: 100%; height: auto; border-radius: var(--radius-img); }
+.work__title { margin: var(--space-md) 0 6px; }
+.work__meta { color: var(--ink); opacity: .6; margin-bottom: var(--space-md); }
+.work__coauthors { color: var(--ink); opacity: .6; margin: 0 0 var(--space-md); }
+.work__desc { margin-bottom: var(--space-lg); white-space: pre-line; }
+.work__gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--grid-gap); }
+.work__gallery figure.photo { margin: 0; }
+.work__gallery img { width: 100%; height: auto; border-radius: var(--radius-img); }
+.work__video {
+  position: relative; width: 100%; aspect-ratio: 16 / 9;
+  margin-top: var(--space-lg); border-radius: var(--radius-img); overflow: hidden;
+}
+.work__video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.back-link { display: inline-block; margin-bottom: var(--space-md); }
+.back-link:hover { color: var(--accent); }
+
+/* ===================================================================
+   STOPKA — copyright + ikony social media
+   =================================================================== */
+.footer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--hairline);
+  padding: var(--space-md) 0;
+}
+.footer__inner {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--page-margin);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+.footer__copy { font-size: var(--size-body); color: var(--ink); }
+.footer__social { display: flex; align-items: center; flex-wrap: nowrap; gap: var(--space-sm); }
+/* link e-mail: ikona koperty + adres tekstem (obok ikon social) */
+.footer__mail {
+  display: inline-flex; align-items: center; gap: 7px;
+  color: var(--ink);
+  font-size: var(--size-body);
+  transition: color .3s ease;
+}
+.footer__mail svg { width: 22px; height: 22px; flex: none; }
+.footer__mail:hover { color: var(--accent); }
+/* ikony-tylko (Instagram / YouTube / LinkedIn) — zmiana koloru + delikatne
+   powiększenie przy najechaniu (bez podskakiwania), jak menu nawigacyjne */
+.footer__social a.icon-only {
+  display: inline-flex; width: 24px; height: 24px;
+  color: var(--ink);
+  transition: color .3s ease, transform .3s ease;
+}
+.footer__social a.icon-only:hover { color: var(--accent); transform: scale(1.18); }
+.footer__social a.icon-only svg { width: 100%; height: 100%; }
+
+/* ===================================================================
+   STRONA STARTOWA (HOME)
+   Statyczne zdjęcie w tle + wyśrodkowane menu w kolorze kremowym.
+   Bez efektów i animacji — taki sam wygląd na komputerze i telefonie.
+   =================================================================== */
+.home {
+  height: 100vh;
+  overflow: hidden;             /* brak scrolla na stronie startowej */
+  background: url("assets/hero-bg.jpg") center / cover no-repeat;
+}
+/* przyciemnienie zdjęcia, żeby kremowe menu było czytelne */
+.home::before {
+  content: "";
+  position: fixed; inset: 0; z-index: 1;
+  background: rgba(0, 0, 0, .38);
+}
+/* wyśrodkowane menu na środku ekranu */
+#home-nav {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  text-align: center;
+  padding: var(--space-md);
+}
+/* logo na HOME — w jednej linii (gdy tekstowe) */
+.home-logo {
+  font-weight: var(--weight-bold);
+  font-size: var(--size-logo);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.home-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-lg);
+}
+.home-link {
+  display: inline-grid;
+  justify-items: center;
+  font-size: var(--size-large);
+  letter-spacing: -0.005em;
+  font-variation-settings: "wght" 500;
+  transition: color .35s ease, font-variation-settings .35s ease;
+}
+.home-link::after {
+  content: attr(data-text);
+  font-variation-settings: "wght" 900;
+  font-weight: 900;
+  height: 0; overflow: hidden; visibility: hidden; pointer-events: none;
+}
+.home-lang { font-size: var(--size-body); }
+
+/* KOLOR MENU NA STRONIE STARTOWEJ — kremowy (#ffffe3, czyli --color-cream).
+   Tu zmieniasz kolor nawigacji na stronie startowej (też na telefonie). */
+.home-logo,
+.home-link,
+.home-lang .lang-opt,
+.home-lang .sep {
+  color: var(--color-cream);
+}
+/* hover odnośnika / aktywny język — kolor akcentu (fioletowy) */
+.home-link:hover,
+.home-lang .lang-opt:hover,
+.home-lang .lang-opt.is-active {
+  color: var(--accent);
+}
+
+/* ===================================================================
+   WERSJA MOBILNA (poniżej 720px)
+   =================================================================== */
+@media (max-width: 720px) {
+  .masonry { column-count: 2; }            /* 2 kolumny na telefonie */
+  .bio-top { grid-template-columns: 1fr; } /* zdjęcie nad tekstem */
+  .bio-columns { grid-template-columns: 1fr; gap: var(--space-lg); }
+  .work__gallery { grid-template-columns: 1fr; }
+  .navbar__inner { gap: var(--space-sm); }
+  .navbar__links { gap: var(--space-sm); }
+  .nav-link, .lang-switch { font-size: 0.8rem; }
+  .footer__inner { flex-direction: column; align-items: flex-start; gap: var(--space-sm); }
+  .footer__social { flex-wrap: wrap; }
+}
+
+/* bardzo wąskie ekrany — kafelki w jednej kolumnie */
+@media (max-width: 420px) {
+  .masonry { column-count: 1; }
+}

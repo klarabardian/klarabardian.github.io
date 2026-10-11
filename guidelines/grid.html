@@ -1,0 +1,21 @@
+<!-- @dsCard group="Spacing" viewport="700x230" name="Siatka 12 kolumn" subtitle="Gutter 15px · 2 kolumny na mobile" -->
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body { margin: 0; padding: 24px; background: #fff; }
+    .demo { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--grid-gap); }
+    .demo span { background: var(--color-cream); border: 1px solid var(--color-violet); height: 56px; border-radius: 3px; }
+    .cap { font-size: 12px; color: #666; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <div class="demo">
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <div class="cap">12 kolumn · gutter <strong>var(--grid-gap) = 15px</strong> (edytowalny w tokens/spacing.css)</div>
+</body>
+</html>

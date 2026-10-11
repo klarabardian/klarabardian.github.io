@@ -1,0 +1,55 @@
+/* ============================================================
+   SIATKA i ODSTĘPY  ·  grid & spacing
+   ------------------------------------------------------------
+   Strona układa się na siatce 12 kolumn z odstępem (gutter) ~15px.
+   Wszystko sterowane jest z poniższych zmiennych — zmień jedną
+   wartość, a zmieni się na całej stronie.
+
+   WERSJA MOBILNA: poniżej 720px szerokości ekranu siatka
+   automatycznie przełącza się na 2 kolumny (patrz @media na dole).
+   ============================================================ */
+
+:root {
+  --grid-columns: 12; /* @kind other */ /* liczba kolumn na desktopie */
+  --grid-gap: 15px;          /* odstęp między kolumnami (gutter) — możesz zmienić */
+  --page-margin: 64px;       /* margines strony po bokach (desktop) */
+  --content-max: 1280px;     /* maksymalna szerokość treści */
+  --nav-height: 108px;       /* wysokość paska nawigacji */
+
+  /* drobne, powtarzalne odstępy pionowe */
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 32px;
+  --space-lg: 64px;
+  --space-xl: 120px;
+
+  /* zaokrąglenia rogów (strona jest minimalna — prawie bez zaokrągleń) */
+  --radius-none: 0px;
+  --radius-img: 2px;         /* leciutkie zaokrąglenie zdjęć, prawie niewidoczne */
+}
+
+/* Kontener wyśrodkowujący treść z marginesami po bokach */
+.container {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--page-margin);
+  box-sizing: border-box;
+}
+
+/* Siatka 12 kolumn — użyj .grid jako rodzica, a dziecku nadaj
+   np. style="grid-column: span 6" żeby zajęło 6 z 12 kolumn. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), 1fr);
+  gap: var(--grid-gap);
+}
+
+/* WERSJA MOBILNA — siatka 2 kolumny i węższe marginesy */
+@media (max-width: 720px) {
+  :root {
+    --page-margin: 20px;
+    --nav-height: 64px;
+  }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}

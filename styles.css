@@ -1,0 +1,14 @@
+/* ============================================================
+   styles.css  ·  GŁÓWNY PLIK STYLÓW (punkt wejścia)
+   ------------------------------------------------------------
+   Ten plik tylko "wczytuje" pozostałe pliki ze stylami.
+   Każda strona HTML linkuje TYLKO ten jeden plik:
+       <link rel="stylesheet" href="styles.css">
+   Kolejność ma znaczenie — najpierw fonty i zmienne, potem reszta.
+   ============================================================ */
+
+@import "tokens/fonts.css";        /* deklaracja fontu Figtree */
+@import "tokens/colors.css";       /* paleta kolorów */
+@import "tokens/typography.css";   /* style tekstu */
+@import "tokens/spacing.css";      /* siatka 12 kolumn i odstępy */
+@import "site.css";                /* style komponentów strony (nawigacja, kafelki, stopka...) */

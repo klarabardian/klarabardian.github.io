@@ -1,0 +1,25 @@
+<!-- @dsCard group="Portfolio" viewport="1280x1000" name="Bio" subtitle="Zdjęcie + tekst + wystawy / festiwale / nagrody / edukacja" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bio · Zuzanna Klara Bardian</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header id="navbar"></header>
+  <main class="page">
+    <div class="container">
+      <!-- Cała treść bio budowana automatycznie z danych w data.js (obiekt BIO) -->
+      <div id="bio-root"></div>
+    </div>
+  </main>
+  <footer id="footer"></footer>
+  <script src="data.js"></script>
+  <script src="site.js"></script>
+  <script>
+    initBioPage();
+  </script>
+</body>
+</html>
