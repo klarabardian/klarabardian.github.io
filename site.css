@@ -697,3 +697,45 @@ body.lightbox-open { overflow: hidden; }
   font-weight: var(--weight-black, 900); font-size: clamp(1.2rem, 4.5vw, 4rem);
   letter-spacing: -0.03em; text-transform: uppercase; white-space: nowrap; line-height: 1;
 }
+
+/* ============================================================
+   USTAWIENIA WYGLĄDU (wybrane przez Zuzannę w panelu, wpisane na stałe)
+   Nadpisują wartości z tokens/*.css. Skala "złotej proporcji" liczy
+   rozmiary z wielkości tekstu podstawowego (--size-body).
+   ============================================================ */
+:root {
+  --accent: #80433c; --ink: #000000; --bg-page: #fafafa; --bg-home: #000000;
+  --size-body: 15px;
+  --size-large: calc(var(--size-body) * 1.272);
+  --size-headline: calc(var(--size-body) * 1.618);
+  --space-md: calc(var(--size-body) * 1.618);
+  --space-lg: calc(var(--size-body) * 4.236);
+  --space-xl: calc(var(--size-body) * 6.854);
+  --grid-gap: calc(var(--size-body) * 2.618);
+  --weight-medium: 450;
+  --leading-body: 1.45;
+  --filters-space: 32px; --filters-gap: 28px;
+  --content-max: 1400px;
+  --radius-img: 9px;
+  --tile-fluid-strength: 0.02; --tile-fluid-force: 0.2; --tile-fluid-radius: 7.5;
+  --tile-fluid-fade: 0.1; --tile-fluid-persist: 1.4;
+  --fluid-strength: 0.15; --fluid-force: 0.7; --fluid-radius: 2.5; --fluid-fade: 0;
+  --fluid-persist: 1; --fluid-swirl: 20; --fluid-chroma: 0.2; --fluid-menu: 0.35;
+  --fluid-auto-mobile: 0.1; --fluid-auto-desktop: 0.5; --fluid-res: 128;
+  --logo-fluid-on: 1; --logo-fluid-mobile: 0; --logo-fluid-strength: 2.4; --logo-fluid-force: 0.45;
+  --logo-fluid-radius: 15; --logo-fluid-fade: 1.5; --logo-fluid-persist: 1.2;
+  --logo-fluid-swirl: 29; --logo-fluid-chroma: 0; --logo-fluid-res: 128;
+}
+@media (min-width: 721px) {
+  :root { --page-margin: 64px; --nav-height: 108px; }
+  .masonry { column-count: 3; }
+  .navbar__logo { font-size: calc(var(--size-body) * 2.618); }
+}
+.home-logo, .home-link, .home-lang .lang-opt, .home-lang .sep { color: #ffffe3; }
+.home-link:hover, .home-lang .lang-opt:hover, .home-lang .lang-opt.is-active { color: var(--accent); }
+.home::before { background: rgba(0, 0, 0, 0.17); }
+.nav-link, .lang-opt, .home-link { font-variation-settings: 'wght' 450; }
+.nav-link:hover, .nav-link.is-active, .lang-opt.is-active { font-variation-settings: 'wght' 900; }
+.t-text, .t-text-large, .t-menu, .tile__caption, .nav-link, .t-list { letter-spacing: 0; }
+.tile { margin-bottom: calc(var(--size-body) * 1.618); }
+.tile__caption { margin-top: calc(var(--size-body) * .5); }

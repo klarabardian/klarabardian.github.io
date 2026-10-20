@@ -21,7 +21,7 @@
    Zdjęcia na stronie nie są dotykane.
 
    Ustawienia to zmienne CSS w tokens/fluid.css (sekcja "logo w pasku");
-   panel "ustawienia" (tweaks.js) zmienia je na żywo.
+   wartości ustawione na końcu site.css.
 
    Kiedy efektu NIE ma (zostaje zwykłe logo):
      • strona startowa (tam logo faluje razem ze zdjęciem),

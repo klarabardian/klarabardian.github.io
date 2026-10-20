@@ -13,8 +13,8 @@
      • zdjęcie jest rysowane z tym przesunięciem.
 
    Ustawienia (moc, wielkość śladu, wiry itd.) to zmienne CSS
-   w tokens/fluid.css; panel "ustawienia" (tweaks.js) zmienia je na
-   żywo, a ten skrypt odczytuje je co klatkę.
+   w tokens/fluid.css (wybrane wartości są na końcu site.css);
+   ten skrypt odczytuje je co klatkę.
 
    Kiedy efektu NIE ma (zostaje zwykłe zdjęcie z CSS):
      • użytkownik ma w systemie włączone "ogranicz ruch",
