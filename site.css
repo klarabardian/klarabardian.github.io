@@ -51,6 +51,24 @@ a { color: inherit; text-decoration: none; }
 }
 /* logo jako plik wektorowy (gdy SITE.logo = { image: "..." }) */
 .logo-img { display: block; width: auto; height: auto; max-width: 100%; }
+/* na komputerze logo w pasku ma szerokość zdjęcia w bio (połowa treści minus pół odstępu między kolumnami) */
+@media (min-width: 721px) {
+  .navbar__logo { flex: none; width: calc((100% - var(--space-lg)) / 2); }
+  .navbar__logo .logo-img { width: 100% !important; }
+}
+/* falowanie logo przy przewijaniu (logo-wave.js): nad logo leży mała kanwa,
+   a prawdziwy napis dostaje przezroczysty tekst (zostaje klikalny) */
+.navbar__logo, .wave-text { position: relative; }
+.navbar__logo.logo-wave-on, .wave-text.logo-wave-on { -webkit-text-fill-color: transparent; }
+.navbar__logo.logo-wave-on .logo-img { opacity: 0; }
+.logo-wave {
+  position: absolute;
+  top: calc(-1 * var(--logo-wave-pad, 12px));
+  left: calc(-1 * var(--logo-wave-pad, 12px));
+  width: calc(100% + 2 * var(--logo-wave-pad, 12px));
+  height: calc(100% + 2 * var(--logo-wave-pad, 12px));
+  pointer-events: none;
+}
 /* grupa linków po prawej */
 .navbar__links {
   display: flex;
@@ -86,7 +104,7 @@ a { color: inherit; text-decoration: none; }
 
 /* przełącznik języka EN | PL — ta sama sztuczka z "duchem", żeby aktywny
    wariant w grubości Black nie przesuwał drugiego */
-.lang-switch { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.lang-switch { display: flex; align-items: center; gap: 12px; white-space: nowrap; }
 .lang-switch .sep { color: var(--ink); opacity: .4; }
 .lang-opt {
   display: inline-grid;
@@ -103,22 +121,102 @@ a { color: inherit; text-decoration: none; }
   height: 0; overflow: hidden; visibility: hidden; pointer-events: none;
 }
 .lang-opt:hover { color: var(--accent); }
+/* w pasku menu aktywny język to jasny napis na rdzawym kółku (zamiast kreski między EN a PL) */
+.navbar .lang-switch { margin-left: clamp(16px, 3vw, 56px); gap: 20px; } /* odsunięcie od nazw sekcji i od siebie EN/PL */
+.navbar .lang-opt { position: relative; }
+.navbar .lang-opt.is-active { color: var(--ink-on-dark); }
+.navbar .lang-opt.is-active::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 2.6em; height: 2.6em;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--accent);
+  z-index: -1;
+}
 .lang-opt.is-active { color: var(--accent); font-variation-settings: "wght" 900; }
 
 /* odsuwamy treść strony spod nieruchomego paska (oprócz HOME) */
 .page {
   flex: 1 0 auto;
-  padding-top: calc(var(--nav-height) + var(--space-lg));
+  padding-top: calc(var(--nav-height) + var(--space-md));
   padding-bottom: var(--space-xl);
 }
 
 /* ===================================================================
+   FILTRY NAD KAFELKAMI (strona prac) — rząd słów jak w menu:
+   aktywne słowo w kolorze wyróżnienia i grubości Black, reszta Medium.
+   =================================================================== */
+/* pasek filtrów stale przyklejony tuż pod paskiem menu (nie przewija się);
+   wysokość strony dopasowuje site.js, żeby kafelki zaczynały się pod nim */
+.filters {
+  position: fixed;
+  top: var(--nav-height);
+  left: 0; right: 0;
+  z-index: 50;                     /* pod paskiem menu (100), nad kafelkami */
+  /* te same odsunięcia co kontener treści, więc prawy koniec filtrów = koniec tekstu bio */
+  padding-inline: max(var(--page-margin), calc((100% - var(--content-max)) / 2 + var(--page-margin)));
+  padding-bottom: var(--filters-space, var(--space-md));  /* więcej powietrza między filtrami a kafelkami */
+  background: var(--bg-page);
+  /* tło lekko wystaje na boki, żeby brzeg zdjęcia przewijanego pod paskiem nie prześwitywał
+     cienką linią (efekt zaokrągleń pikseli) */
+  box-shadow: -8px 0 0 var(--bg-page), 8px 0 0 var(--bg-page);
+}
+/* rząd słów: szerokość tylko tyle, ile zajmują napisy; wyrównany do prawej,
+   w tej samej osi co treść strony (margin-right = odsunięcie treści od krawędzi) */
+.filters__row {
+  display: flex;
+  flex-wrap: wrap;                 /* na wąskim ekranie łamie się do kilku linii */
+  justify-content: flex-end;       /* słowa wyrównane do prawej */
+  align-items: center;
+  gap: 0.35em var(--filters-gap, clamp(14px, 2vw, 32px));
+  width: fit-content;
+  max-width: 100%;
+  margin-left: auto;
+  padding-top: var(--space-sm);
+  /* krótka kreska tuż pod menu, tej długości co napisy */
+  border-top: 1px solid var(--accent);
+}
+.filters:empty { display: none; }  /* strony bez filtrów nie zostawiają pustego odstępu */
+.filter-btn {
+  display: inline-grid;            /* "duch" ::after rezerwuje szerokość pogrubionej wersji */
+  justify-items: center;
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-size: calc(var(--size-body) * .8);
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  white-space: nowrap;
+  cursor: pointer;
+  font-variation-settings: "wght" 500;
+  transition: color .35s ease, font-variation-settings .35s ease;
+}
+.filter-btn::after {
+  content: attr(data-text);
+  font-variation-settings: "wght" 900;
+  font-weight: 900;
+  height: 0; overflow: hidden; visibility: hidden; pointer-events: none;
+}
+.filter-btn:hover,
+.filter-btn.is-active { color: var(--accent); font-variation-settings: "wght" 900; }
+
+/* ===================================================================
    KAFELKI W STYLU PINTEREST (masonry — różne wysokości, 3 kolumny)
-   Robimy to przez CSS "columns" — najlżejszy sposób na taki układ.
+   Kolumny tworzy site.js (initListPage), kafelki idą od lewej do prawej.
    =================================================================== */
 .masonry {
-  column-count: 3;                 /* 3 kolumny na desktopie */
-  column-gap: var(--grid-gap);     /* odstęp = gutter z siatki */
+  display: flex;
+  align-items: flex-start;         /* kolumny nie rozciągają się do najwyższej */
+  gap: var(--grid-gap);            /* odstęp = gutter z siatki */
+}
+.masonry__col {
+  flex: 1 1 0;
+  min-width: 0;
 }
 .tile {
   break-inside: avoid;             /* nie tnij kafelka między kolumnami */
@@ -147,9 +245,18 @@ a { color: inherit; text-decoration: none; }
 .tile__img {
   width: 100%;
   height: auto;
-  transition: transform .6s cubic-bezier(.2,.7,.2,1); /* płynne powiększenie */
+  display: block;
 }
-.tile:hover .tile__img { transform: scale(1.04); }    /* delikatne powiększenie */
+/* zamiast powiększenia: lekki efekt płynu pod kursorem (photo-fluid.js). Jedna kanwa na cały
+   ekran rysuje kafelki w pobliżu kursora; pod paskiem nawigacji i pod podpisem fotografa */
+.tile-fluid-canvas {
+  position: fixed; inset: 0; z-index: 1;
+  width: 100%; height: 100%;
+  display: block;
+  pointer-events: none;
+  visibility: hidden;          /* widoczna tylko, gdy efekt działa */
+}
+.tile__imgwrap .photo-credit { z-index: 2; }  /* podpis fotografa nad kanwą efektu */
 .tile__caption {
   margin-top: 10px;
   font-size: var(--size-body);
@@ -186,10 +293,10 @@ figure.photo { position: relative; margin: 0; }
 .photo-credit {
   position: absolute;
   left: 0; right: 0; bottom: 0;
-  padding: 12px 16px;
-  background: linear-gradient(to top, rgba(0, 0, 0, .6), rgba(0, 0, 0, 0));
+  padding: 8px 12px;
+  background: linear-gradient(to top, rgba(0, 0, 0, .28), rgba(0, 0, 0, 0));
   color: var(--color-cream);
-  font-size: var(--size-body);
+  font-size: calc(var(--size-body) * .8);
   opacity: 0;
   transition: opacity .3s ease;
   pointer-events: none;
@@ -207,12 +314,68 @@ figure.photo { position: relative; margin: 0; }
   gap: var(--space-lg);
   align-items: center;              /* tekst wyśrodkowany względem wysokości zdjęcia */
 }
-.bio-photo { width: 100%; height: auto; border-radius: var(--radius-img); }
+.bio-photo { width: 100%; height: auto; border-radius: var(--radius-img); display: block; }
+.bio-photo-fig { position: relative; margin: 0; } /* podpis fotografa (.photo-credit) nad kanwą efektu */
+/* efekt płynu na zdjęciu (photo-fluid.js): nad obrazkiem leży kanwa tej samej
+   wielkości; sam obrazek zostaje pod spodem jako wersja zapasowa */
+.fluid-photo-wrap { position: relative; display: block; touch-action: pinch-zoom; }
+.fluid-photo-canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  display: block;
+  border-radius: var(--radius-img);
+  pointer-events: none;
+}
 .bio-text { white-space: pre-line; } /* zachowuje przejścia do nowej linii z data.js */
+.bio-text { text-align: center; }
+/* cytat odsłaniany trzykropkiem: blok = 61,8% szerokości (złota proporcja), wyśrodkowany, tekst do lewej;
+   odstęp między akapitami = 0,618 wysokości linii */
+.bio-quote { color: color-mix(in srgb, var(--accent) 80%, #000); font-weight: var(--weight-medium); font-style: normal; width: 61.8%; margin: 0; text-align: left; }
+.bio-quote p { margin: 0; }
+.bio-quote p + p { margin-top: .618em; }
+.bio-quote[hidden] { display: none; }
+/* duże kółko pod zdjęciem, wyśrodkowane */
+.bio-more {
+  display: block;
+  flex: none;
+  margin: 0;
+  padding: var(--space-sm) var(--space-md) var(--space-sm) 0;   /* pole klikania wokół kółka */
+  background: none;
+  border: 0;
+  /* średnica kółka = szerokość zdjęcia × 0,618^7 (złota proporcja); zdjęcie = (szerokość − odstęp) / 2.
+     Kółko ma .1em, więc font-size = 10 × średnica */
+  font-size: calc((100cqw - var(--space-lg)) / 2 * 0.0344 * 10);
+  line-height: 0;
+  color: var(--accent);
+  cursor: pointer;
+}
+/* kółko rysowane stylem (nie znakiem): przy hover rośnie od środka */
+.bio-more span {
+  display: block;
+  width: .1em;
+  height: .1em;
+  border-radius: 50%;
+  background: currentColor;
+  transform-origin: center;
+  transition: transform .35s ease;
+}
+/* odstęp między kółkiem a rozwiniętym komentarzem */
+.bio-more-row {
+  display: flex;
+  container-type: inline-size;     /* pozwala liczyć wielkość kółka z szerokości bloku (cqw) */
+  align-items: center;             /* kółko na środku wysokości komentarza */
+  margin-top: var(--bio-gap, var(--space-lg));   /* zdjęcie → blok: tyle samo co blok → kolumny */
+}
+.bio-more-row .bio-quote { margin: 0; }
+/* na podstronie pracy kółko tej samej wielkości co w bio (liczone z szerokości treści strony, nie z wąskiego bloku pracy) */
+.work__comment .bio-more { font-size: calc((min(100vw, var(--content-max)) - var(--space-lg)) / 2 * 0.0213 * 10); } /* o jeden stopień złotej proporcji mniejsze niż w bio: 0,618^8 */
+.work__comment { margin-block: var(--space-md); }
+.bio-more:hover span, .bio-more:focus-visible span { transform: scale(1.15); }
+.bio-more:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
 /* trzy kolumny: wystawy / festiwale / nagrody */
 .bio-columns {
-  margin-top: var(--space-xl);
+  margin-top: var(--bio-gap, var(--space-lg));
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-lg);
@@ -227,22 +390,116 @@ figure.photo { position: relative; margin: 0; }
 /* ===================================================================
    PODSTRONA PROJEKTU (artwork site)
    =================================================================== */
-.work { max-width: 1000px; margin-inline: auto; }
-.work__hero { width: 100%; margin: 0 0 0; }
-.work__hero > img { width: 100%; height: auto; border-radius: var(--radius-img); }
+.work { max-width: calc(var(--content-max) * 0.887); margin-inline: auto; } /* minimalnie węższa niż strony sekcji: 0,618^(1/4) */
+.work__hero { width: 100%; margin: 0 0 var(--space-md); }
+/* zdjęcie główne zawsze mieści się w oknie (pionowe nie rozciąga się na kilka ekranów) */
+.work__hero > img {
+  display: block; width: auto; height: auto; max-width: 100%;
+  max-height: calc(100vh - var(--nav-height) - var(--space-lg) * 2);
+  margin-inline: auto; border-radius: var(--radius-img);
+}
+/* praca z "heroFull: true": zdjęcie główne na całą szerokość, bez ograniczenia wysokości */
+.work__hero--full > img { width: 100%; max-height: none; }
 .work__title { margin: var(--space-md) 0 6px; }
 .work__meta { color: var(--ink); opacity: .6; margin-bottom: var(--space-md); }
 .work__coauthors { color: var(--ink); opacity: .6; margin: 0 0 var(--space-md); }
-.work__desc { margin-bottom: var(--space-lg); white-space: pre-line; }
+.work__desc { margin-bottom: var(--space-md); white-space: pre-line; }
+/* zdjęcie na całą szerokość bloku tekstowego */
+.work__banner { width: 100%; margin: var(--space-md) 0; }
+.work__banner img { width: 100%; height: auto; border-radius: var(--radius-img); }
 .work__gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--grid-gap); }
+.work__gallery--row { grid-template-columns: repeat(3, 1fr); align-items: start; } /* praca z "row: true": wszystkie zdjęcia w jednym rzędzie */
+/* praca z "pairs: true": zdjęcia w parze mają tę samą wysokość (niższe jest minimalnie przycięte do wyższego) */
+.work__gallery--pairs figure.photo { height: 100%; }
+.work__gallery--pairs img { height: 100%; object-fit: cover; }
 .work__gallery figure.photo { margin: 0; }
 .work__gallery img { width: 100%; height: auto; border-radius: var(--radius-img); }
+.work__gallery--pairs img { height: 100%; }
+/* "pairsRatio" (np. "3 / 2"): wszystkie zdjęcia dokładnie w tych proporcjach (przycięcie równo, po kilka pikseli) */
+.work__gallery--ratio img { height: auto; aspect-ratio: var(--pair-ratio); object-fit: cover; }
+.work figure.photo img { cursor: zoom-in; }
+/* odstęp między dużym a małymi zdjęciami = odstęp kolumn × złota proporcja (1,618) */
+.work { --photo-gap: calc(var(--grid-gap) * var(--phi)); }
+.work__hero:has(+ .work__gallery) { margin-bottom: var(--photo-gap); }
+.work__gallery + .work__hero { margin-top: var(--photo-gap); }
+.work__video + .work__hero { margin-top: var(--photo-gap); }
+.work__banner + .work__gallery { margin-top: var(--photo-gap); }
+
+/* zdjęcie na cały ekran */
+.lightbox {
+  position: fixed; inset: 0; z-index: 1000;
+  display: none; align-items: center; justify-content: center;
+  background: var(--bg-page); cursor: zoom-out;
+}
+.lightbox.is-open { display: flex; }
+.lightbox__img { max-width: 96vw; max-height: calc(100vh - 80px); object-fit: contain; }
+.lightbox__credit {
+  position: absolute; left: 0; right: 0; bottom: 12px;
+  text-align: center; color: var(--ink); opacity: .85;
+  font-size: calc(var(--size-body) * .8); pointer-events: none;
+}
+.lightbox__credit:empty { display: none; }
+body.lightbox-open { overflow: hidden; }
+.lightbox__nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 48px; height: 48px; padding: 0; border: 0; border-radius: 50%;
+  background: var(--bg-page); color: var(--ink); font-size: 24px; line-height: 1;
+  cursor: pointer; opacity: .75; transition: opacity .15s;
+}
+.lightbox__nav:hover, .lightbox__nav:focus-visible { opacity: 1; }
+.lightbox__nav--prev { left: 12px; }
+.lightbox__nav--next { right: 12px; }
+.lightbox.is-single .lightbox__nav { display: none; }
 .work__video {
   position: relative; width: 100%; aspect-ratio: 16 / 9;
   margin-top: var(--space-lg); border-radius: var(--radius-img); overflow: hidden;
 }
+/* gdy współtwórcy stoją tuż nad filmem: mniejszy odstęp (tylko odstęp coauthors, bez zmiany reszty) */
+.work__coauthors + .work__video { margin-top: 0; }
+/* film tuż pod tytułem i rodzajem pracy: odstęp tylko z marginesu rodzaju */
+.work__meta + .work__video { margin-top: 0; }
 .work__video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-.back-link { display: inline-block; margin-bottom: var(--space-md); }
+/* okładka z przyciskiem play; prawdziwy odtwarzacz YouTube ładuje się po kliknięciu */
+.work__video-play {
+  position: absolute; inset: 0; width: 100%; height: 100%; padding: 0;
+  border: 0; background: #000; cursor: pointer;
+}
+.work__video-play img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .2s; }
+.work__video-play:hover img, .work__video-play:focus-visible img { opacity: .85; }
+.work__video-icon {
+  position: absolute; top: 50%; left: 50%; width: 72px; height: 72px;
+  transform: translate(-50%, -50%); border-radius: 50%;
+  background: rgba(0, 0, 0, .55); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+.work__video-icon svg { width: 36px; height: 36px; }
+/* film z YouTube o innych proporcjach (kwadrat, pionowy short): okno wg --video-ratio,
+   nie szersze niż kolumna i nie wyższe niż ekran */
+.work__video--ratio {
+  aspect-ratio: var(--video-ratio);
+  width: min(100%, calc((100vh - var(--nav-height) - var(--space-lg) * 2) * var(--video-ratio)));
+  margin-inline: auto;
+}
+/* własny plik filmu: proporcje z filmu, pionowy nie wychodzi poza ekran */
+.work__video--file { aspect-ratio: auto; text-align: center; }
+/* film na całą szerokość strony (pole "videoFull" w data.js), bez zaokrągleń i wcięcia kolumny */
+.work__video--full { width: 100vw; margin-left: calc(50% - 50vw); border-radius: 0; }
+.work__video--file video {
+  display: block; width: auto; height: auto; max-width: 100%;
+  max-height: calc(100vh - var(--nav-height) - var(--space-lg) * 2);
+  margin-inline: auto; border-radius: var(--radius-img); background: #000;
+}
+.back-bar {
+  /* „inne projekty” przykleja się pod paskiem menu, gdy przewijamy podstronę w dół */
+  position: sticky;
+  top: var(--nav-height);
+  z-index: 50;                     /* pod paskiem menu (100), nad treścią */
+  display: block;
+  padding-bottom: var(--space-md); /* odstęp od treści (zamiast marginesu, żeby tło go obejmowało) */
+  background: var(--bg-page);
+  box-shadow: -8px 0 0 var(--bg-page), 8px 0 0 var(--bg-page);
+}
+.back-link { display: inline-block; }
 .back-link:hover { color: var(--accent); }
 
 /* ===================================================================
@@ -285,32 +542,55 @@ figure.photo { position: relative; margin: 0; }
 
 /* ===================================================================
    STRONA STARTOWA (HOME)
-   Statyczne zdjęcie w tle + wyśrodkowane menu w kolorze kremowym.
-   Bez efektów i animacji — taki sam wygląd na komputerze i telefonie.
+   Zdjęcie w tle + wyśrodkowane menu w kolorze kremowym.
+   Na zdjęciu działa efekt płynu (fluid.js) — kursor / dotyk je
+   zniekształca. Zdjęcie w CSS poniżej to wersja zapasowa: widać ją,
+   zanim efekt się załaduje, gdy przeglądarka go nie obsługuje albo
+   gdy użytkownik ma włączone "ogranicz ruch" w systemie.
    =================================================================== */
+/* krótkie zanikanie strony startowej przy przejściu na inną stronę (home.js) */
+.home { transition: opacity .35s ease; }
+.home.is-leaving { opacity: 0; }
+
 .home {
   height: 100vh;
   overflow: hidden;             /* brak scrolla na stronie startowej */
   background: url("assets/hero-bg.jpg") center / cover no-repeat;
+  touch-action: pinch-zoom;     /* palec przesuwa ciecz, nie stronę */
 }
+/* kanwa z efektem płynu — pod przyciemnieniem i pod menu */
+.home-fluid {
+  position: fixed; inset: 0; z-index: 0;
+  width: 100%; height: 100%;
+  display: block;
+  pointer-events: none;
+}
+/* Gdy efekt działa (fluid.js dodaje klasę "fluid-on"), napisy menu rysuje
+   sam efekt — razem ze zdjęciem, więc falują pod dotykiem. Prawdziwe menu
+   zostaje na miejscu (klikalne, z podświetleniem), tylko jego tekst jest
+   przezroczysty. Przyciemnienie też robi wtedy efekt (pod napisami). */
+.home.fluid-on::before { opacity: 0; }
+.home.fluid-on .home-logo,
+.home.fluid-on .home-link,
+.home.fluid-on .home-lang > span { -webkit-text-fill-color: transparent; }
+.home.fluid-on .logo-img { opacity: 0; }
 /* przyciemnienie zdjęcia, żeby kremowe menu było czytelne */
 .home::before {
   content: "";
   position: fixed; inset: 0; z-index: 1;
   background: rgba(0, 0, 0, .38);
 }
-/* wyśrodkowane menu na środku ekranu */
+/* logo dokładnie na środku ekranu, menu pod nim (3 wiersze: pusty / logo / menu) */
 #home-nav {
   position: fixed;
   inset: 0;
   z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-md);
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
+  justify-items: center;
   text-align: center;
-  padding: var(--space-md);
+  /* dół większy o --space-lg: cała grupa (logo + menu) unosi się o pół tego odstępu */
+  padding: var(--space-md) var(--space-md) calc(var(--space-md) + var(--space-lg));
 }
 /* logo na HOME — w jednej linii (gdy tekstowe) */
 .home-logo {
@@ -320,6 +600,17 @@ figure.photo { position: relative; margin: 0; }
   letter-spacing: -0.03em;
   text-transform: uppercase;
   white-space: nowrap;
+}
+/* logo na samym środku; menu zaczyna się pod nim, z odstępem (--space-lg) */
+#home-nav > .home-logo { grid-row: 2; align-self: center; margin: 0; }
+.home-below {
+  grid-row: 3;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
 }
 .home-links {
   display: flex;
@@ -351,21 +642,41 @@ figure.photo { position: relative; margin: 0; }
 .home-lang .sep {
   color: var(--color-cream);
 }
-/* hover odnośnika / aktywny język — kolor akcentu (fioletowy) */
+/* hover odnośnika / aktywny język — kolor akcentu (rdza) */
 .home-link:hover,
 .home-lang .lang-opt:hover,
 .home-lang .lang-opt.is-active {
   color: var(--accent);
 }
+/* jasne kółko POD wybranym językiem (kolor jasnego tekstu).
+   Przy włączonym efekcie płynu kółko rysuje fluid.js, więc tu jest ukryte. */
+/* wersje językowe (EN | PL) w prawym górnym rogu, poza menu na środku */
+.home-lang {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  gap: var(--space-md);
+}
+.home-lang .lang-opt { position: relative; }
+.home-lang .lang-opt.is-active::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 1.9em; height: 1.9em;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--color-cream);
+  z-index: -1;
+}
+.home.fluid-on .home-lang .lang-opt.is-active::before { display: none; }
 
 /* ===================================================================
    WERSJA MOBILNA (poniżej 720px)
    =================================================================== */
 @media (max-width: 720px) {
-  .masonry { column-count: 2; }            /* 2 kolumny na telefonie */
   .bio-top { grid-template-columns: 1fr; } /* zdjęcie nad tekstem */
   .bio-columns { grid-template-columns: 1fr; gap: var(--space-lg); }
-  .work__gallery { grid-template-columns: 1fr; }
+  .work__gallery, .work__gallery--row { grid-template-columns: 1fr; }
   .navbar__inner { gap: var(--space-sm); }
   .navbar__links { gap: var(--space-sm); }
   .nav-link, .lang-switch { font-size: 0.8rem; }
@@ -373,7 +684,16 @@ figure.photo { position: relative; margin: 0; }
   .footer__social { flex-wrap: wrap; }
 }
 
-/* bardzo wąskie ekrany — kafelki w jednej kolumnie */
-@media (max-width: 420px) {
-  .masonry { column-count: 1; }
+/* wielki pasek "WORK IN PROGRESS" na środku ekranu (strona gier i podstrony gier); napis faluje jak logo (klasa wave-text) */
+.wip-banner {
+  position: fixed; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+  z-index: 50; pointer-events: none;
+  background: var(--accent); color: #fff;
+  padding-block: clamp(12px, 2.2vw, 30px);
+  text-align: center;
+}
+.wip-banner__text {
+  display: block; margin: 0;
+  font-weight: var(--weight-black, 900); font-size: clamp(1.2rem, 4.5vw, 4rem);
+  letter-spacing: -0.03em; text-transform: uppercase; white-space: nowrap; line-height: 1;
 }

@@ -10,6 +10,7 @@
    ============================================================ */
 
 :root {
+  --phi: 1.618;              /* złota proporcja — używana w panelu „Złota proporcja” i odstępach zdjęć */
   --grid-columns: 12; /* @kind other */ /* liczba kolumn na desktopie */
   --grid-gap: 15px;          /* odstęp między kolumnami (gutter) — możesz zmienić */
   --page-margin: 64px;       /* margines strony po bokach (desktop) */

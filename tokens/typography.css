@@ -61,7 +61,7 @@ body {
   color: var(--ink);
 }
 
-/* MENU CHOOSE — fiolet, Black 16 (pozycja aktywna lub :hover) */
+/* MENU CHOOSE — rdza, Black 16 (pozycja aktywna lub :hover) */
 .t-menu-choose,
 .t-menu.is-active,
 .t-menu:hover {

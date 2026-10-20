@@ -1,0 +1,52 @@
+/* ============================================================
+   EFEKT PŁYNU  ·  strona startowa (HOME) + zdjęcie w bio
+   ------------------------------------------------------------
+   Zdjęcie w tle zachowuje się jak ciecz: ruch kursora (na
+   telefonie: dotyk) je rozlewa i zniekształca. Kod efektu jest
+   w pliku fluid.js, a te zmienne sterują jego "mocą" i innymi
+   cechami. Panel "ustawienia" zmienia dokładnie te wartości.
+   Te same wartości sterują też efektem na zdjęciu w bio
+   (photo-fluid.js) — tam ślad kursora jest przeliczany na
+   wielkość zdjęcia, żeby ruch wyglądał tak samo jak na starcie;
+   ruch "sam z siebie" (--fluid-auto-*) działa tylko na starcie.
+   ============================================================ */
+
+:root {
+  --fluid-strength: 1;        /* moc zniekształcenia zdjęcia (0 = brak, 1 = tyle, ile "przepłynęła" ciecz) */
+  --fluid-force: 0.7;         /* jak mocno kursor popycha ciecz */
+  --fluid-radius: 6;          /* wielkość śladu kursora (% wysokości ekranu) */
+  --fluid-fade: 1.5;          /* jak szybko ciecz się uspokaja (większe = szybciej) */
+  --fluid-persist: 1;         /* jak szybko zdjęcie wraca do normy (większe = szybciej) */
+  --fluid-swirl: 20;          /* wiry (0 = ciecz płynie prosto) */
+  --fluid-chroma: 0.15;       /* rozszczepienie kolorów na krawędziach zniekształcenia */
+  --fluid-menu: 0.35;         /* jak mocno napisy menu falują razem ze zdjęciem (0 = napisy sztywne, 1 = tak samo jak zdjęcie) */
+  --fluid-auto-mobile: 0.1;   /* delikatny ruch sam z siebie na telefonie (0 = wyłączony, 0.1 = minimum) */
+  --fluid-auto-desktop: 0;    /* delikatny ruch sam z siebie na komputerze (0 = wyłączony) */
+  --tile-fluid-strength: 0.14; /* kafelki list prac: moc zniekształcenia (0 = efekt wyłączony) */
+  --tile-fluid-force: 0.8;     /* kafelki: jak mocno kursor popycha ciecz */
+  --tile-fluid-radius: 2.5;    /* kafelki: wielkość śladu kursora (% wysokości ekranu) */
+  --tile-fluid-fade: 1.6;      /* kafelki: jak szybko ciecz się uspokaja (większe = szybciej) */
+  --tile-fluid-persist: 0.5;   /* kafelki: jak szybko zdjęcie wraca do normy (mniejsze = wolniejsze wygaszanie) */
+  --fluid-res: 128;           /* dokładność symulacji (większa = ładniej, ale wolniej) */
+}
+
+/* ============================================================
+   LOGO W PASKU  ·  podstrony (kod: logo-wave.js)
+   ------------------------------------------------------------
+   Kursor nad logo w górnym pasku rozlewa je jak ciecz (ta sama
+   symulacja co na stronie startowej, ale tylko na polu wielkości
+   logo). Panel "ustawienia" zmienia te wartości na żywo.
+   ============================================================ */
+
+:root {
+  --logo-fluid-on: 1;         /* 1 = włączone, 0 = zwykłe logo */
+  --logo-fluid-mobile: 0;     /* 1 = działa też na telefonie/tablecie (dotyk); 0 = tam zwykłe logo */
+  --logo-fluid-strength: 0.3; /* jak mocno litery się rozlewają (0 = wcale) */
+  --logo-fluid-force: 1;      /* jak mocno kursor popycha ciecz */
+  --logo-fluid-radius: 30;    /* wielkość śladu kursora (% wysokości pola logo) */
+  --logo-fluid-fade: 1.5;     /* jak szybko ciecz się uspokaja (większe = szybciej) */
+  --logo-fluid-persist: 1;    /* jak szybko napis wraca do normy (0 = zostaje rozlany) */
+  --logo-fluid-swirl: 10;     /* wiry (0 = ciecz płynie prosto) */
+  --logo-fluid-chroma: 0.3;   /* rozszczepienie kolorów na krawędziach liter */
+  --logo-fluid-res: 48;       /* dokładność symulacji (komórek na wysokość; większa = ładniej, ale wolniej) */
+}

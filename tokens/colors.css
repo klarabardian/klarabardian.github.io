@@ -13,14 +13,14 @@
   --color-white: #ffffff;          /* biel */
   --color-off-white: #fdfdfd;      /* RGB 253,253,253 — tło większości stron */
   --color-cream: #ffffe3;          /* RGB 255,255,227 — tło strony startowej (HOME) */
-  --color-violet: #7f5a83;         /* RGB 127,90,131 — fiolet: aktywne / podświetlone menu */
+  --color-rust: #a8442f;           /* RGB 168,68,47 — rdza: aktywne / podświetlone menu (kolor wzięty z prac) */
 
   /* --- role / znaczenia (używaj tych w kodzie stron) --- */
   --bg-page: var(--color-off-white);   /* domyślne tło strony */
   --bg-home: var(--color-cream);        /* tło strony startowej */
   --ink: var(--color-black);            /* kolor tekstu */
   --ink-on-dark: var(--color-off-white);/* tekst na ciemnym/zdjęciu (np. menu mobilne na HOME) */
-  --accent: var(--color-violet);        /* kolor zaznaczenia / hover w menu */
+  --accent: var(--color-rust);          /* kolor zaznaczenia / hover w menu */
 
   /* delikatna linia / obrys (rzadko używana, neutralna) */
   --hairline: rgba(0, 0, 0, 0.10);
