@@ -47,6 +47,12 @@
   var MEASURE_FRAMES = 40;        // z ilu klatek liczymy średnią
   var qualityLevel = 0;
 
+  // Okręgi na wodzie po dotknięciu palcem — TYLKO na telefonie/tablecie (ekran dotykowy).
+  // To osobny wzór nakładany na zdjęcie, niezależny od symulacji płynu. Wartości: --fluid-ripple
+  // i --ripple-* w tokens/fluid.css.
+  var MAX_RIPPLES = 6;            // ile okręgów naraz
+  var RIPPLE_LIFE = 4;            // po ilu sekundach okrąg znika całkiem (potem już go nie liczymy)
+
   if (!document.body || !document.body.classList.contains("home")) return;
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -70,6 +76,11 @@
       chroma: cssNum("--fluid-chroma", 0.3),
       auto: cssNum(isTouch ? "--fluid-auto-mobile" : "--fluid-auto-desktop", isTouch ? 0.1 : 0),
       menu: cssNum("--fluid-menu", 0.35),
+      ripple: isTouch ? cssNum("--fluid-ripple", 0.05) : 0,
+      ripSpeed: cssNum("--ripple-speed", 0.1), ripDecay: cssNum("--ripple-decay", 0.4),
+      ripGap: cssNum("--ripple-gap", 0.2), ripWidth: cssNum("--ripple-width", 0.0059),
+      ripFreq: cssNum("--ripple-freq", 70), ripDisp: cssNum("--ripple-disp", 0.08),
+      ripShine: cssNum("--ripple-shine", 0.08), ripCount: cssNum("--ripple-count", 1),
       res: Math.max(32, Math.min(512, Math.round(cssNum("--fluid-res", 128) * QUALITY_LEVELS[qualityLevel].res)))
     };
   }
@@ -214,16 +225,36 @@
   // przyciemnia je i nakłada napisy menu zniekształcone tą samą mapą (słabiej: uMenu)
   var FRAG_DISPLAY = HEAD + [
     "uniform sampler2D uImage, uDisp, uText; uniform vec2 uCover;",
-    "uniform float uStrength, uChroma, uDim, uMenu;",
+    "uniform float uStrength, uChroma, uDim, uMenu, uAspect;",
+    "uniform vec4 uRipA, uRipB;", // A: szybkość, zanikanie, odstęp, grubość; B: gęstość fal, zniekształcenie, poświata, liczba okręgów
+    "uniform vec4 uRip[" + MAX_RIPPLES + "];", // x, y (0..1), wiek w sekundach, siła (0 = puste)
     "void main () {",
     "  vec2 d = texture2D(uDisp, vUv).xy * uStrength;",
+    "  float shine = 0.0;",
+    "  for (int i = 0; i < " + MAX_RIPPLES + "; i++) {",
+    "    vec4 rp = uRip[i];",
+    "    if (rp.w <= 0.0) continue;",
+    "    vec2 dv = vUv - rp.xy; dv.x *= uAspect;",
+    "    float r = length(dv);",
+    "    float front = rp.z * uRipA.x;",
+    "    float fade = rp.w * exp(-rp.z * uRipA.y);",
+    "    for (int k = 0; k < 6; k++) {", // okręgi jeden za drugim, jak po wrzuceniu kamyka
+    "      if (float(k) >= uRipB.w) break;",
+    "      float x = r - (front - float(k) * uRipA.z);",
+    "      float env = exp(-x * x / uRipA.w) * (1.0 - float(k) * 0.15);",
+    "      float w = sin(x * uRipB.x) * env * fade;",
+    "      vec2 dir = dv / (r + 0.0001); dir.x /= uAspect;",
+    "      d += dir * w * uRipB.y;",
+    "      shine += w * uRipB.z;",
+    "    }",
+    "  }",
     "  vec2 uv = (vUv - 0.5) * uCover + 0.5;",
     "  vec2 off = d * uCover;",
     "  vec2 ca = off * uChroma;",
     "  float r = texture2D(uImage, uv - off - ca).r;",
     "  float g = texture2D(uImage, uv - off).g;",
     "  float b = texture2D(uImage, uv - off + ca).b;",
-    "  vec3 col = vec3(r, g, b) * (1.0 - uDim);",
+    "  vec3 col = vec3(r, g, b) * (1.0 - uDim) + shine;",
     "  vec4 t = texture2D(uText, vUv - d * uMenu);",
     "  col = mix(col, t.rgb, t.a);",
     "  gl_FragColor = vec4(col, 1.0);",
@@ -515,6 +546,15 @@
     lastInput = performance.now();
     wake();
   }
+  var ripples = [];       // { x, y, t0 }
+  function pointerDown(e) {
+    if (!isTouch) return;
+    ripples.push({ x: e.clientX / window.innerWidth, y: 1 - e.clientY / window.innerHeight, t0: performance.now() });
+    if (ripples.length > MAX_RIPPLES) ripples.shift();
+    lastInput = performance.now();
+    wake();
+  }
+  window.addEventListener("pointerdown", pointerDown, { passive: true });
   function pointerEnd(e) { delete pointers[e.pointerId]; }
   window.addEventListener("pointermove", pointerMove, { passive: true });
   window.addEventListener("pointerdown", pointerMove, { passive: true });
@@ -650,6 +690,15 @@
     gl.uniform1i(pr.u.uText, 2);
     gl.uniform1f(pr.u.uDim, readDim());
     gl.uniform1f(pr.u.uMenu, P.menu);
+    gl.uniform1f(pr.u.uAspect, canvasAspect);
+    var now = performance.now(), rip = new Float32Array(MAX_RIPPLES * 4);
+    ripples = ripples.filter(function (r) { return now - r.t0 < RIPPLE_LIFE * 1000; });
+    ripples.forEach(function (r, i) {
+      rip[i * 4] = r.x; rip[i * 4 + 1] = r.y; rip[i * 4 + 2] = (now - r.t0) / 1000; rip[i * 4 + 3] = P.ripple;
+    });
+    gl.uniform4fv(pr.u["uRip[0]"], rip);
+    gl.uniform4f(pr.u.uRipA, P.ripSpeed, P.ripDecay, P.ripGap, P.ripWidth);
+    gl.uniform4f(pr.u.uRipB, P.ripFreq, P.ripDisp, P.ripShine, P.ripCount);
     blit(null);
   }
 

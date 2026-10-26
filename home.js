@@ -27,9 +27,18 @@
   const enA = lang === "en" ? " is-active" : "";
   const plA = lang === "pl" ? " is-active" : "";
 
+  // na telefonie logo rozbite na trzy słowa jedno pod drugim (osobne pliki, każdy to wycinek logo)
+  const stacked = window.matchMedia("(max-width: 720px)").matches;
+  const logo = stacked
+    ? `<div class="home-logo-stack">` +
+      [1, 2, 3].map((n) => logoHTML("home-logo home-logo--w" + n, "assets/logos/home-stack-" + n + ".svg", 0)).join("") +
+      `</div>`
+    : logoHTML("home-logo", "assets/logos/medium1-light.svg", Math.round(SITE.logo.width * 1.618));
+  window.matchMedia("(max-width: 720px)").addEventListener("change", () => location.reload());
+
   nav.innerHTML =
     // na stronie startowej logo w kolorze liter (kremowe) i większe o złotą proporcję (× φ)
-    logoHTML("home-logo", "assets/logos/medium1-light.svg", Math.round(SITE.logo.width * 1.618)) +
+    logo +
     // menu (odnośniki + języki) leży pod logo, które stoi dokładnie na środku ekranu
     `<div class="home-below">` +
     `<div class="home-links">${linksHTML}</div>` +

@@ -103,10 +103,10 @@ const I18N = {
    • "href" to plik strony, na który prowadzi odnośnik.
    ------------------------------------------------------------------- */
 const NAV = [
-  { key: "nav_artworks", href: "artworks.html" },   // prace / art works
-  { key: "nav_videos",   href: "videos.html" },     // filmy / video
-  { key: "nav_games",    href: "games.html" },      // games / gry
-  { key: "nav_bio",      href: "bio.html" },         // bio (na końcu)
+  { key: "nav_artworks", href: "artworks" },   // prace / art works
+  { key: "nav_videos",   href: "videos" },     // filmy / video
+  { key: "nav_games",    href: "games" },      // games / gry
+  { key: "nav_bio",      href: "bio" },         // bio (na końcu)
 ];
 
 /* -------------------------------------------------------------------
@@ -603,8 +603,8 @@ const VIDEOS = [
       pl: "<strong>Krótko o zmianach.</strong>",
     },
     comment: {
-      en: "The day before the first April we took the morning train. We stopped in an open field and cut each other's hair.",
-      pl: "Dzień przed pierwszym kwietnia wsiadłyśmy w poranny pociąg. Zatrzymałyśmy się w szczerym polu i ścięłyśmy włosy.",
+      en: "The day before the first April we took the morning train.\n\nWe stopped in an open field and cut each other's hair.",
+      pl: "Dzień przed pierwszym kwietnia wsiadłyśmy w poranny pociąg.\n\nZatrzymałyśmy się w szczerym polu i ścięłyśmy włosy.",
     },
     coauthors: ["Magdalena Kłodnicka", "Zofia Widuch"],
     layout: ["title", "meta", "coauthors", "video", "desc"], // opis i komentarz pod odtwarzaczem
@@ -731,8 +731,12 @@ const GAMES = [
     kind: { en: "large-format board game", pl: "gra wielkoformatowa" },
     year: "2025",
     desc: {
-      en: "Under Starachowice sleeps a powerful Star that witches want for themselves. The players collect artefacts to stop their sabbath.\n\nMade as part of my work for the Good Culture Foundation and the public library in Starachowice.",
-      pl: "Pod Starachowicami śpi potężna Gwiazda, której pragną wiedźmy. Gracze zbierają artefakty, żeby powstrzymać sabat.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Miejskiej Biblioteki Publicznej w Starachowicach.",
+      en: "Under Starachowice lies a hidden Star that the witches covet. The players collect artefacts to stop them.\n\nMade as part of my work for the Good Culture Foundation and the public library in Starachowice.",
+      pl: "Pod Starachowicami jest ukryta Gwiazda, której pragną wiedźmy. Gracze zbierają artefakty, żeby je powstrzymać.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Miejskiej Biblioteki Publicznej w Starachowicach.",
+    },
+    comment: {
+      en: "The game was designed on the basis of a competition for a legend written in modern times.",
+      pl: "Gra została zaprojektowana na podstawie konkursu na współcześnie napisaną legendę.",
     },
     gallery: ["assets/works/opowiesci-z-gwiezdnego-miasta-2.jpg", "assets/works/opowiesci-z-gwiezdnego-miasta-3.jpg", "assets/works/opowiesci-z-gwiezdnego-miasta-4.jpg", "assets/works/opowiesci-z-gwiezdnego-miasta-5.jpg"],
     youtube: "",
@@ -744,8 +748,12 @@ const GAMES = [
     kind: { en: "large-format board game", pl: "gra wielkoformatowa" },
     year: "2025",
     desc: {
-      en: "1946: families return from Bukovina and start over in the Recovered Territories. A cooperative game, it can only be won together.\n\nMade as part of my work for the Good Culture Foundation and the cultural centre in Jastrowie.",
-      pl: "Rok 1946, rodziny wracają z Bukowiny i zaczynają życie od nowa na Ziemiach Odzyskanych. Gra kooperacyjna, wygrać można tylko razem.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Ośrodka Kultury w Jastrowiu.",
+      en: "The players take on the roles of families resettled from Bukovina to the Recovered Territories. The task is to assimilate with the local residents as much as possible.\n\nMade as part of my work for the Good Culture Foundation and the cultural centre in Jastrowie.",
+      pl: "Gracze wcielają się w rodziny przesiedlonych z Bukowiny na Ziemie Odzyskane. Zadaniem jest jak największa asymilacja z lokalnymi mieszkańcami.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Ośrodka Kultury w Jastrowiu.",
+    },
+    comment: {
+      en: "The aim of the project was to interest children and young people in the local history of the Bukovinians. Visually, the game was meant to resemble Minecraft, so I combined pixel art with traditional embroidery and other elements of tradition.",
+      pl: "Założeniem projektu było zainteresowanie dzieci i młodzieży lokalną historią Bukowińczyków. Wizualnie gra miała przypominać Minecrafta, więc połączyłam pixelart z tradycyjnymi haftami i innymi elementami tradycji.",
     },
     gallery: ["assets/works/koraliki-nasze-tradycje-2.jpg", "assets/works/koraliki-nasze-tradycje-3.jpg", "assets/works/koraliki-nasze-tradycje-4.jpg", "assets/works/koraliki-nasze-tradycje-5.jpg"],
     youtube: "",
@@ -757,8 +765,12 @@ const GAMES = [
     kind: { en: "large-format board game", pl: "gra wielkoformatowa" },
     year: "2025",
     desc: {
-      en: "Demons known from legends start haunting local villages. The players gather strength together and defeat them one by one.\n\nMade as part of my work for the Good Culture Foundation and the public library in Kijewo Królewskie.",
-      pl: "Demony znane z legend zaczynają nawiedzać wsie. Gracze wspólnie zdobywają siłę i pokonują je po kolei.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Gminnej Biblioteki Publicznej w Kijewie Królewskim.",
+      en: "Demons known until now only from stories have begun to haunt your villages, frighten people at night and spread disease. Your task is to defeat them together.\n\nMade as part of my work for the Good Culture Foundation and the public library in Kijewo Królewskie.",
+      pl: "Demony do tej pory znane tylko z opowieści zaczęły nawiedzać wasze miejscowości, straszyć po nocach i szerzyć choroby. Waszym zadaniem jest wspólnie je pokonać.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Gminnej Biblioteki Publicznej w Kijewie Królewskim.",
+    },
+    comment: {
+      en: "The images of the demons are based on the book by Natalia Zacharek and Anna Koprowska.",
+      pl: "Wizerunki demonów są stworzone na podstawie książki Natalii Zacharek i Anny Koprowskiej.",
     },
     gallery: ["assets/works/pogromcy-chelminskich-demonow-2.jpg", "assets/works/pogromcy-chelminskich-demonow-3.jpg", "assets/works/pogromcy-chelminskich-demonow-4.jpg", "assets/works/pogromcy-chelminskich-demonow-5.jpg"],
     youtube: "",
@@ -770,8 +782,8 @@ const GAMES = [
     kind: { en: "large-format board game", pl: "gra wielkoformatowa" },
     year: "2025",
     desc: {
-      en: "The Great Depression, no jobs. The emperor of the utopce reveals the way to a legendary treasure, and the players pack for the trip across the marshes.\n\nMade as part of my work for the Good Culture Foundation and the public library in Mysłowice.",
-      pl: "Wielki kryzys, brak pracy. Cesarz utopców zdradza drogę do legendarnego skarbu, a gracze zbierają wyposażenie na wyprawę przez bagna.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Miejskiej Biblioteki Publicznej w Mysłowicach.",
+      en: "The emperor of the utopce reveals the way to a legendary treasure, but before you reach it you have to prepare for a crossing through the marshes.\n\nMade as part of my work for the Good Culture Foundation and the public library in Mysłowice.",
+      pl: "Cesarz utopców zdradza Wam drogę do legendarnego skarbu, ale zanim się do niego dorwiecie, musicie przygotować się na przeprawę przez bagna.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Miejskiej Biblioteki Publicznej w Mysłowicach.",
     },
     gallery: ["assets/works/utopce-z-myslowic-2.jpg", "assets/works/utopce-z-myslowic-3.jpg", "assets/works/utopce-z-myslowic-4.jpg", "assets/works/utopce-z-myslowic-5.jpg"],
     youtube: "",
@@ -783,8 +795,8 @@ const GAMES = [
     kind: { en: "large-format board game", pl: "gra wielkoformatowa" },
     year: "2025",
     desc: {
-      en: "Midsummer night. The players race through the forest for the fern flower before the sun comes up.\n\nMade as part of my work for the Good Culture Foundation and the cultural centre in Kiernozia.",
-      pl: "Noc świętojańska. Gracze ścigają się przez las po kwiat paproci, zanim wzejdzie słońce.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Miejsko-Gminnego Ośrodka Kultury w Kiernozi.",
+      en: "During Midsummer Night the players race through the forest in search of the fern flower, before the sun rises.\n\nMade as part of my work for the Good Culture Foundation and the cultural centre in Kiernozia.",
+      pl: "W czasie nocy świętojańskiej gracze ścigają się przez las w poszukiwaniu kwiatu paproci, zanim wzejdzie słońce.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Miejsko-Gminnego Ośrodka Kultury w Kiernozi.",
     },
     gallery: ["assets/works/w-poszukiwaniu-kwiatu-paproci-2.jpg", "assets/works/w-poszukiwaniu-kwiatu-paproci-3.jpg", "assets/works/w-poszukiwaniu-kwiatu-paproci-4.jpg", "assets/works/w-poszukiwaniu-kwiatu-paproci-5.jpg"],
     youtube: "",
@@ -796,8 +808,8 @@ const GAMES = [
     kind: { en: "large-format board game", pl: "gra wielkoformatowa" },
     year: "2025",
     desc: {
-      en: "A game about road safety. On their birthday the players cycle around delivering invitations and try to get back before the cake.\n\nMade as part of my work for the Good Culture Foundation and the Rural Women’s Association in Wygnanka.",
-      pl: "Gra o bezpieczeństwie na drodze. W dniu urodzin gracze rozwożą rowerem zaproszenia i starają się zdążyć na tort.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Koła Gospodyń Wiejskich w Wygnance.",
+      en: "The players deliver birthday invitations by bike and try to make it back in time for the cake, while obeying the rules of the road.\n\nMade as part of my work for the Good Culture Foundation and the Rural Women’s Association in Wygnanka.",
+      pl: "Gracze rozwożą rowerem urodzinowe zaproszenia i starają się zdążyć na tort, przestrzegając zasad ruchu drogowego.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Koła Gospodyń Wiejskich w Wygnance.",
     },
     gallery: ["assets/works/wygraj-bezpieczenstwo-2.jpg", "assets/works/wygraj-bezpieczenstwo-3.jpg", "assets/works/wygraj-bezpieczenstwo-4.jpg", "assets/works/wygraj-bezpieczenstwo-5.jpg"],
     youtube: "",
@@ -809,8 +821,8 @@ const GAMES = [
     kind: { en: "large-format board game", pl: "gra wielkoformatowa" },
     year: "2025",
     desc: {
-      en: "Nobel laureate Władysław Reymont is coming to Wierzchosławice. The players collect everything for the harvest festival, and whoever finishes first welcomes the guest.\n\nMade as part of my work for the Good Culture Foundation and the public library in Wierzchosławice.",
-      pl: "Do Wierzchosławic przyjeżdża noblista Władysław Reymont. Gracze zbierają wszystko na dożynki, a kto skończy pierwszy, powita gościa.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Gminnej Biblioteki Publicznej w Wierzchosławicach.",
+      en: "The village of Wierzchosławice is getting ready for Władysław Reymont’s visit to the harvest festival. Whoever gathers the needed artefacts first will welcome the guest.\n\nMade as part of my work for the Good Culture Foundation and the public library in Wierzchosławice.",
+      pl: "Wierzchosławice szykują się na przyjazd Władysława Reymonta na dożynki. Kto szybciej zbierze potrzebne artefakty, powita gościa.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Gminnej Biblioteki Publicznej w Wierzchosławicach.",
     },
     gallery: ["assets/works/na-dozynki-z-reymontem-2.jpg", "assets/works/na-dozynki-z-reymontem-3.jpg", "assets/works/na-dozynki-z-reymontem-4.jpg", "assets/works/na-dozynki-z-reymontem-5.jpg"],
     youtube: "",
@@ -822,8 +834,8 @@ const GAMES = [
     kind: { en: "large-format board game", pl: "gra wielkoformatowa" },
     year: "2024",
     desc: {
-      en: "June 1944. A surviving partisan has to warn the group hidden in the forest before a German train reaches it.\n\nMade as part of my work for the Good Culture Foundation and the public library in Łomża.",
-      pl: "Czerwiec 1944. Ocalały partyzant musi ostrzec oddział ukryty w lesie, zanim dotrze do niego niemiecki pociąg.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Miejskiej Biblioteki Publicznej w Łomży.",
+      en: "The players race a German train to warn a unit hidden in the forest.\n\nMade as part of my work for the Good Culture Foundation and the public library in Łomża.",
+      pl: "Gracze ścigają się z niemieckim pociągiem, aby ostrzec przed nim oddział ukryty w lesie.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Miejskiej Biblioteki Publicznej w Łomży.",
     },
     gallery: ["assets/works/po-wolnosc-czerwony-bor-44-2.jpg", "assets/works/po-wolnosc-czerwony-bor-44-3.jpg", "assets/works/po-wolnosc-czerwony-bor-44-4.jpg", "assets/works/po-wolnosc-czerwony-bor-44-5.jpg"],
     youtube: "",
@@ -835,8 +847,12 @@ const GAMES = [
     kind: { en: "large-format board game", pl: "gra wielkoformatowa" },
     year: "2024",
     desc: {
-      en: "A game about the history of Hel and the defence of the peninsula in 1939. A time-travel experiment goes wrong, and the players collect memories from the past to get back.\n\nMade as part of my work for the Good Culture Foundation and the public library in Hel.",
-      pl: "Gra o historii Helu i obronie półwyspu w 1939 roku. Eksperyment z podróżą w czasie się nie udaje, a gracze zbierają wspomnienia z przeszłości, żeby wrócić.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Miejskiej Biblioteki Publicznej im. Stefana Żeromskiego w Helu.",
+      en: "Time travel goes wrong, so the players have to gather memories of the defence of the peninsula in 1939 in order to return.\n\nMade as part of my work for the Good Culture Foundation and the public library in Hel.",
+      pl: "Podróż w czasie się nie udaje, gracze muszą zebrać wspomnienia z obrony półwyspu w 1939 roku, żeby wrócić.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Miejskiej Biblioteki Publicznej im. Stefana Żeromskiego w Helu.",
+    },
+    comment: {
+      en: "The illustrations are modelled on archival photographs from Hel.",
+      pl: "Ilustracje wzorowane są na archiwalnych zdjęciach z Helu.",
     },
     gallery: ["assets/works/helskie-drogi-2.jpg", "assets/works/helskie-drogi-3.jpg", "assets/works/helskie-drogi-4.jpg", "assets/works/helskie-drogi-5.jpg"],
     youtube: "",
@@ -848,8 +864,8 @@ const GAMES = [
     kind: { en: "large-format board game", pl: "gra wielkoformatowa" },
     year: "2024",
     desc: {
-      en: "One morning the library is in chaos. The players bring order back to its departments.\n\nMade as part of my work for the Good Culture Foundation and the city library in Grudziądz.",
-      pl: "Pewnego ranka w bibliotece panuje chaos. Gracze przywracają porządek w jej oddziałach.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Biblioteki Miejskiej im. Wiktora Kulerskiego w Grudziądzu.",
+      en: "One morning a huge mess appears in the library. The players have to win over the library gnomes and set things in order.\n\nMade as part of my work for the Good Culture Foundation and the city library in Grudziądz.",
+      pl: "Pewnego ranka w bibliotece powstał ogromny bałagan. Zadaniem graczy jest udobruchanie krasnoludków bibliotecznych i zrobienie porządku.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Biblioteki Miejskiej im. Wiktora Kulerskiego w Grudziądzu.",
     },
     gallery: ["assets/works/archiwum-czasu-2.jpg", "assets/works/archiwum-czasu-3.jpg", "assets/works/archiwum-czasu-4.jpg", "assets/works/archiwum-czasu-5.jpg"],
     youtube: "",
@@ -874,8 +890,12 @@ const GAMES = [
     kind: { en: "large-format board game", pl: "gra wielkoformatowa" },
     year: "2025",
     desc: {
-      en: "A strike at the linen factory in Żyrardów, 1883. The players form a strike committee and win over workers from other departments.\n\nMade as part of my work for the Good Culture Foundation and the Linen Museum in Żyrardów.",
-      pl: "Strajk w fabryce lnu w Żyrardowie, 1883 rok. Gracze tworzą komitet strajkowy i zdobywają poparcie załogi z innych oddziałów.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Muzeum Lniarstwa im. Filipa de Girarda w Żyrardowie.",
+      en: "A strike at the linen factory in Żyrardów, 1883. The players form a strike committee and win support from other departments of the factory.\n\nMade as part of my work for the Good Culture Foundation and the Linen Museum in Żyrardów.",
+      pl: "Strajk w fabryce lnu w Żyrardowie, 1883 rok. Gracze tworzą komitet strajkowy i zdobywają poparcie innych oddziałów fabryki.\n\nProjekt zrobiony w ramach pracy dla Fundacji Good Culture i Muzeum Lniarstwa im. Filipa de Girarda w Żyrardowie.",
+    },
+    comment: {
+      en: "The board is based on the original layout of the factory town.",
+      pl: "Plansza bazuje na oryginalnym rozplanowaniu fabrycznego miasteczka.",
     },
     gallery: ["assets/works/strajk-szpularek-1883-2.jpg", "assets/works/strajk-szpularek-1883-3.jpg", "assets/works/strajk-szpularek-1883-4.jpg", "assets/works/strajk-szpularek-1883-5.jpg"],
     youtube: "",
@@ -917,7 +937,6 @@ const DEFAULT_WORK_LAYOUT = ["title", "meta", "coauthors", "desc", "hero", "gall
    ------------------------------------------------------------------- */
 const BIO = {
   photo: "assets/bio.jpg",
-  photoBy: "Joanna Malinowska", // autorka zdjęcia: podpis "fot. ..." po najechaniu na zdjęcie
   text: {
     en: "She was born in Wrocław in 2000. She graduated with a Bachelor's degree in Industrial Design and a Master's degree in Media Art from the Eugeniusz Geppert Academy of Fine Arts. She currently lives and works in Wrocław.\n\nHer artistic practice explores the relationships we have and the effort we put into learning what should come naturally and intuitively to us.",
     pl: "Urodzona we Wrocławiu w 2000 roku. Ukończyła Sztukę Mediów oraz Wzornictwo na Akademii Sztuk Pięknych im. Eugeniusza Gepperta. Mieszka i pracuje we Wrocławiu.\n\nW swojej praktyce twórczej bada relacje i&nbsp;wysiłek, jaki wkładamy w&nbsp;naukę tego, co powinno być dla nas naturalne i&nbsp;intuicyjne.",

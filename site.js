@@ -77,7 +77,7 @@ function logoHTML(className, image = SITE.logo.image, width = SITE.logo.width) {
         (width ? ` style="width:${width}px"` : "") +
         `>`
       : SITE.logo;
-  return `<a class="${className}" href="index.html">${inner}</a>`;
+  return `<a class="${className}" href="./">${inner}</a>`;
 }
 
 /* Pomocnik: ujednolica zdjęcie do postaci { src, photo }.
@@ -126,6 +126,19 @@ const SOCIAL_SVG = {
    PASEK NAWIGACJI — budujemy HTML i wstawiamy w <header id="navbar">
    activeKey = która zakładka jest aktualnie otwarta (podświetlona)
    ------------------------------------------------------------------- */
+// na telefonie logo w pasku to trzy słowa jedno pod drugim, wyrównane do lewej (wycinki logo, każdy to osobny plik)
+function navLogoHTML() {
+  const mq = window.matchMedia("(max-width: 720px)");
+  if (!mq.matches) {
+    mq.addEventListener("change", () => location.reload());
+    return logoHTML("navbar__logo");
+  }
+  mq.addEventListener("change", () => location.reload());
+  return `<div class="navbar__logo-stack">` +
+    [1, 2, 3].map((n) => logoHTML("navbar__logo-w", "assets/logos/nav-stack-" + n + ".svg", 0)).join("") +
+    `</div>`;
+}
+
 function buildNavbar(activeKey) {
   const lang = getLang();
   // budujemy HTML linków z listy NAV (kolejność i nazwy ustawiasz w data.js)
@@ -150,7 +163,7 @@ function buildNavbar(activeKey) {
   header.className = "navbar";
   header.innerHTML =
     `<div class="navbar__inner">` +
-    logoHTML("navbar__logo") +
+    navLogoHTML() +
     `<nav class="navbar__links">${linksHTML}${langHTML}</nav>` +
     `</div>`;
 }
@@ -207,7 +220,7 @@ function tileHTML(item, showTitle = false) {
       ? `<div class="tile__caption"><span class="tile__meta">${meta}</span></div>`
       : "";
     return (
-      `<a class="tile" href="artwork.html?id=${item.id}">` +
+      `<a class="tile" href="artwork?id=${item.id}">` +
       `<div class="tile__imgwrap tile__imgwrap--empty">` +
       `<span class="tile__emptytitle">${title}</span>` +
       `</div>${showTitle ? caption : metaOnly}</a>`
@@ -219,7 +232,7 @@ function tileHTML(item, showTitle = false) {
     ? `<span class="photo-credit">${t("photo_by")} ${cover.photo}</span>`
     : "";
   return (
-    `<a class="tile" href="artwork.html?id=${item.id}">` +
+    `<a class="tile" href="artwork?id=${item.id}">` +
     `<div class="tile__imgwrap${cover.photo ? " has-credit" : ""}">` +
     `<img class="tile__img" src="${cover.src.replace("assets/works/", "assets/works/tiles/")}" alt="${title}" loading="lazy">` +
     credit +
@@ -237,7 +250,7 @@ function tileHTML(item, showTitle = false) {
                gdy jest, nad kafelkami pojawiają się przyciski filtrów,
                a praca pasuje do filtra, jeśli ma jego klucz w polu "tags".
    ------------------------------------------------------------------- */
-function initListPage(activeKey, list, showTitles = false, filters = null) {
+function initListPage(activeKey, list, showTitles = false, filters = null, alignCaptions = false) {
   buildNavbar(activeKey);
   buildFooter();
   const grid = document.getElementById("grid");
@@ -271,9 +284,21 @@ function initListPage(activeKey, list, showTitles = false, filters = null) {
     grid.innerHTML = Array.from({ length: n }, (_, c) =>
       `<div class="masonry__col">` + shown.filter((_, i) => i % n === c).map((t) => t.html).join("") + `</div>`
     ).join("");
+    equalizeCaptions();
+  };
+  // alignCaptions: wszystkie podpisy mają wysokość najdłuższego, więc kafelki z krótkim podpisem nie wyglądają na niższe
+  const equalizeCaptions = () => {
+    if (!alignCaptions) return;
+    const caps = [...grid.querySelectorAll(".tile__caption")];
+    caps.forEach((c) => { c.style.minHeight = ""; });
+    const h = Math.max(0, ...caps.map((c) => c.offsetHeight));
+    caps.forEach((c) => { c.style.minHeight = h + "px"; });
   };
   draw();
-  window.addEventListener("resize", () => draw(false));
+  window.addEventListener("resize", () => { draw(false); equalizeCaptions(); });
+  if (document.fonts) document.fonts.ready.then(equalizeCaptions);
+  window.addEventListener("load", equalizeCaptions);
+  if (alignCaptions && window.ResizeObserver) new ResizeObserver(equalizeCaptions).observe(grid); // szerokość kolumn zmienia się np. po pojawieniu się paska przewijania
 
   if (filters) buildFilters(filters, active, (key) => { active = key; draw(true); });
 }
@@ -308,7 +333,7 @@ function buildFilters(filters, active, onChange) {
   fitPage();
 
   // prawy koniec rzędu filtrów = prawy koniec napisu "bio" w menu (liczymy z pozycji linku)
-  const bioLink = document.querySelector('.navbar a.nav-link[href="bio.html"]');
+  const bioLink = document.querySelector('.navbar a.nav-link[href="bio"]');
   const alignToBio = () => {
     if (!bioLink) return;
     bar.style.paddingRight = `${document.documentElement.clientWidth - bioLink.getBoundingClientRect().right}px`;
@@ -333,7 +358,6 @@ function buildFilters(filters, active, onChange) {
 
 // ile kolumn ma kafelkowa siatka — zgodnie z media queries w site.css
 function masonryColumns() {
-  if (window.matchMedia("(max-width: 420px)").matches) return 1;
   if (window.matchMedia("(max-width: 720px)").matches) return 2;
   return 3;
 }
@@ -399,7 +423,7 @@ function initWorkPage() {
 
   const root = document.getElementById("work-root");
   if (!work || work.placeholder) {
-    root.innerHTML = `<a class="back-link t-text" href="artworks.html">${t("back")}</a><p class="t-text-large">—</p>`;
+    root.innerHTML = `<a class="back-link t-text" href="artworks">${t("back")}</a><p class="t-text-large">—</p>`;
     return;
   }
 
@@ -461,9 +485,9 @@ function initWorkPage() {
   };
 
   // odnośnik powrotu kieruje do sekcji, do której należy praca
-  let backHref = "artworks.html";
-  if (VIDEOS.indexOf(work) !== -1) backHref = "videos.html";
-  else if (GAMES.indexOf(work) !== -1) backHref = "games.html";
+  let backHref = "artworks";
+  if (VIDEOS.indexOf(work) !== -1) backHref = "videos";
+  else if (GAMES.indexOf(work) !== -1) backHref = "games";
 
   // odnośnik "inne projekty" zawsze na górze; reszta wg kolejności z "order"
   root.innerHTML =
@@ -506,9 +530,10 @@ function initLightbox(root) {
   box.className = "lightbox";
   box.innerHTML =
     `<img class="lightbox__img" alt="">` +
+    `<button class="lightbox__close" aria-label="×"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>` +
     `<div class="lightbox__credit"></div>` +
-    `<button class="lightbox__nav lightbox__nav--prev" aria-label="←">&#8592;</button>` +
-    `<button class="lightbox__nav lightbox__nav--next" aria-label="→">&#8594;</button>`;
+    `<button class="lightbox__nav lightbox__nav--prev" aria-label="←"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4M11 5l-7 7 7 7"/></svg></button>` +
+    `<button class="lightbox__nav lightbox__nav--next" aria-label="→"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M13 5l7 7-7 7"/></svg></button>`;
   document.body.appendChild(box);
   const big = box.querySelector(".lightbox__img");
   const credit = box.querySelector(".lightbox__credit");
@@ -544,6 +569,29 @@ function initLightbox(root) {
     else if (e.target.closest(".lightbox__nav--next")) show(index + 1);
     else close();
   });
+  // przesuwanie palcem: zdjęcie podąża za palcem, puszczone dalej niż 50px przełącza na następne / poprzednie
+  let startX = null, startY = 0, dx = 0;
+  box.addEventListener("touchstart", (e) => {
+    if (imgs.length < 2 || e.touches.length !== 1) return;
+    startX = e.touches[0].clientX; startY = e.touches[0].clientY; dx = 0;
+    big.style.transition = "none";
+  }, { passive: true });
+  box.addEventListener("touchmove", (e) => {
+    if (startX === null) return;
+    const ddy = e.touches[0].clientY - startY;
+    dx = e.touches[0].clientX - startX;
+    if (Math.abs(ddy) > Math.abs(dx)) { dx = 0; return; } // ruch w pionie nie przesuwa zdjęcia
+    big.style.transform = `translateX(${dx}px)`;
+  }, { passive: true });
+  const endSwipe = () => {
+    if (startX === null) return;
+    startX = null;
+    big.style.transition = "transform .2s ease";
+    big.style.transform = "";
+    if (Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1));
+  };
+  box.addEventListener("touchend", endSwipe);
+  box.addEventListener("touchcancel", endSwipe);
   document.addEventListener("keydown", (e) => {
     if (!isOpen()) return;
     if (e.key === "Escape") close();
@@ -551,6 +599,20 @@ function initLightbox(root) {
     else if (e.key === "ArrowRight" && imgs.length > 1) show(index + 1);
   });
 }
+
+/* Strzałka "do góry": pojawia się po zjechaniu poniżej pierwszego ekranu. */
+(function () {
+  if (document.body.classList.contains("home")) return;
+  const b = document.createElement("button");
+  b.className = "to-top";
+  b.setAttribute("aria-label", getLang() === "pl" ? "Do góry" : "Back to top");
+  b.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V4M5 11l7-7 7 7"/></svg>`;
+  document.body.appendChild(b);
+  const upd = () => b.classList.toggle("is-visible", window.scrollY > window.innerHeight * 0.3);
+  window.addEventListener("scroll", upd, { passive: true });
+  b.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+  upd();
+})();
 
 /* -------------------------------------------------------------------
    TWARDE SPACJE PO SIEROTACH (tylko PL)

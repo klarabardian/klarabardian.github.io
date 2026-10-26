@@ -25,7 +25,7 @@
 
    Kiedy efektu NIE ma (zostaje zwykłe logo):
      • strona startowa (tam logo faluje razem ze zdjęciem),
-     • telefon / tablet (ekran dotykowy), chyba że --logo-fluid-mobile = 1,
+     • telefon / tablet (ekran dotykowy), gdy --logo-fluid-mobile = 0,
      • "ogranicz ruch" w systemie,
      • brak WebGL z teksturami zmiennoprzecinkowymi,
      • bardzo wolny komputer (klatki trwają za długo → efekt się wyłącza),
@@ -369,6 +369,20 @@
     window.addEventListener("pointercancel", pointerEnd, { passive: true });
     document.addEventListener("mouseleave", function () { pointers = {}; });
 
+    // na dotyku przeglądarka zabiera palec do przewijania (pointercancel), więc przewijanie też miesza ciecz
+    var lastScrollY = window.pageYOffset;
+    window.addEventListener("scroll", function () {
+      var y = window.pageYOffset, d = y - lastScrollY;
+      lastScrollY = y;
+      if (!isTouch || !isOn || !rect || !d) return;
+      var p = pointers.scroll || (pointers.scroll = { x: 0.5, y: 0.5, dx: 0, dy: 0, fresh: false });
+      p.x = 0.2 + Math.random() * 0.6; p.y = 0.5;
+      p.dy = clamp(p.dy - d / Math.max(rect.height, 1) * 0.5, -0.1, 0.1);
+      p.dx = clamp(p.dx + (Math.random() - 0.5) * 0.04, -0.1, 0.1);
+      lastInput = performance.now();
+      wake();
+    }, { passive: true });
+
     /* ----------------------------------------------------------------
        Symulacja cieczy — jeden krok
        ---------------------------------------------------------------- */
@@ -559,9 +573,9 @@
 
   // ten sam efekt mają: logo w pasku oraz każdy napis z klasą "wave-text" (np. pasek WORK IN PROGRESS w grach)
   function startAll() {
-    var els = document.querySelectorAll(".navbar__logo, .wave-text");
+    var els = document.querySelectorAll(".navbar__logo, .navbar__logo-w, .wave-text");
     for (var i = 0; i < els.length; i++) start(els[i]);
   }
-  if (document.querySelector(".navbar__logo")) startAll();
+  if (document.querySelector(".navbar__logo, .navbar__logo-w")) startAll();
   else document.addEventListener("DOMContentLoaded", startAll);
 })();

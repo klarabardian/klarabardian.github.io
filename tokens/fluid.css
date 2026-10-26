@@ -27,6 +27,15 @@
   --tile-fluid-radius: 2.5;    /* kafelki: wielkość śladu kursora (% wysokości ekranu) */
   --tile-fluid-fade: 1.6;      /* kafelki: jak szybko ciecz się uspokaja (większe = szybciej) */
   --tile-fluid-persist: 0.5;   /* kafelki: jak szybko zdjęcie wraca do normy (mniejsze = wolniejsze wygaszanie) */
+  --fluid-ripple: 0.05;       /* okręgi po dotknięciu (TYLKO telefon): siła (0 = wyłączone) */
+  --ripple-disp: 0.08;        /* okręgi: zniekształcenie zdjęcia */
+  --ripple-shine: 0.08;       /* okręgi: jasność fal */
+  --ripple-count: 1;          /* okręgi: ile fal biegnie po sobie (1-6) */
+  --ripple-speed: 0.1;        /* okręgi: szybkość rozchodzenia (wysokości ekranu na sekundę) */
+  --ripple-decay: 0.4;        /* okręgi: szybkość znikania (większe = szybciej) */
+  --ripple-gap: 0.2;          /* okręgi: odstęp między falami */
+  --ripple-width: 0.0059;     /* okręgi: grubość fali */
+  --ripple-freq: 70;          /* okręgi: gęstość prążków w fali */
   --fluid-res: 128;           /* dokładność symulacji (większa = ładniej, ale wolniej) */
 }
 
