@@ -53,7 +53,7 @@
     return {
       on: cssNum("--logo-fluid-on", 1) > 0 && (!isTouch || cssNum("--logo-fluid-mobile", 0) > 0),
       chroma: cssNum("--logo-fluid-chroma", 0.3),
-      strength: cssNum("--logo-fluid-strength", 0.3),
+      strength: isTouch ? cssNum("--logo-fluid-strength-touch", cssNum("--logo-fluid-strength", 0.3)) : cssNum("--logo-fluid-strength", 0.3),
       force: cssNum("--logo-fluid-force", 1),
       radius: cssNum("--logo-fluid-radius", 30),
       fade: cssNum("--logo-fluid-fade", 1.5),
@@ -377,8 +377,8 @@
       if (!isTouch || !isOn || !rect || !d) return;
       var p = pointers.scroll || (pointers.scroll = { x: 0.5, y: 0.5, dx: 0, dy: 0, fresh: false });
       p.x = 0.2 + Math.random() * 0.6; p.y = 0.5;
-      p.dy = clamp(p.dy - d / Math.max(rect.height, 1) * 0.5, -0.1, 0.1);
-      p.dx = clamp(p.dx + (Math.random() - 0.5) * 0.04, -0.1, 0.1);
+      p.dy = clamp(p.dy - d / Math.max(rect.height, 1) * cssNum("--logo-fluid-scroll", 0.1), -0.1, 0.1);
+      p.dx = clamp(p.dx + (Math.random() - 0.5) * 0.01, -0.1, 0.1);
       lastInput = performance.now();
       wake();
     }, { passive: true });

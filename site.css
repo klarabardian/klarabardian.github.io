@@ -744,7 +744,7 @@ body.lightbox-open .to-top { display: none; }
   --fluid-strength: 0.15; --fluid-force: 0.7; --fluid-radius: 2.5; --fluid-fade: 0;
   --fluid-persist: 1; --fluid-swirl: 20; --fluid-chroma: 0.2; --fluid-menu: 0.35;
   --fluid-auto-mobile: 0.5; --fluid-auto-desktop: 0.5; --fluid-res: 128;
-  --logo-fluid-on: 1; --logo-fluid-mobile: 1; --logo-fluid-strength: 2.4; --logo-fluid-force: 0.45;
+  --logo-fluid-on: 1; --logo-fluid-mobile: 1; --logo-fluid-strength-touch: 0.5; --logo-fluid-scroll: 0.1; --logo-fluid-strength: 2.4; --logo-fluid-force: 0.45;
   --logo-fluid-radius: 15; --logo-fluid-fade: 1.5; --logo-fluid-persist: 1.2;
   --logo-fluid-swirl: 29; --logo-fluid-chroma: 0; --logo-fluid-res: 128;
 }
