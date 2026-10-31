@@ -708,7 +708,7 @@ body.lightbox-open .to-top { display: none; }
 
 /* wielki pasek "WORK IN PROGRESS" na środku ekranu (strona gier i podstrony gier); napis faluje jak logo (klasa wave-text) */
 .wip-banner {
-  position: fixed; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+  position: fixed; left: 0; right: 0; top: 50vh; top: 50svh; transform: translateY(-50%); /* svh: nie skacze, gdy pasek przeglądarki się chowa */
   z-index: 50; pointer-events: none;
   background: var(--accent); color: #fff;
   padding-block: clamp(12px, 2.2vw, 30px);
@@ -743,7 +743,7 @@ body.lightbox-open .to-top { display: none; }
   --tile-fluid-fade: 0.1; --tile-fluid-persist: 1.4;
   --fluid-strength: 0.15; --fluid-force: 0.7; --fluid-radius: 2.5; --fluid-fade: 0;
   --fluid-persist: 1; --fluid-swirl: 20; --fluid-chroma: 0.2; --fluid-menu: 0.35;
-  --fluid-auto-mobile: 0.5; --fluid-auto-desktop: 0.5; --fluid-res: 128;
+  --fluid-auto-mobile: 1.2; --fluid-auto-speed-mobile: 2; --fluid-auto-desktop: 0.5; --fluid-res: 128;
   --logo-fluid-on: 1; --logo-fluid-mobile: 1; --logo-fluid-strength-touch: 0.5; --logo-fluid-scroll: 0.1; --logo-fluid-strength: 2.4; --logo-fluid-force: 0.45;
   --logo-fluid-radius: 15; --logo-fluid-fade: 1.5; --logo-fluid-persist: 1.2;
   --logo-fluid-swirl: 29; --logo-fluid-chroma: 0; --logo-fluid-res: 128;
@@ -815,3 +815,63 @@ body.lightbox-open .to-top { display: none; }
   /* komentarz dalej od kropki */
   .bio-more-row .bio-quote { margin-top: var(--space-md); }
 }
+
+/* ============================================================
+   TABLET (721–1024px), TELEFON POZIOMO (niski ekran) i WĄSKI TELEFON
+   ------------------------------------------------------------
+   Wcześniej strona znała tylko dwa układy: telefon (do 720px)
+   i komputer. Tablety i telefony trzymane poziomo dostawały układ
+   komputerowy z szerokimi marginesami i wysokim paskiem, a wąskie
+   telefony nie mieściły menu w jednej linii. Tu są poprawki.
+   ============================================================ */
+
+/* przeglądarka na iPhonie nie powiększa sama tekstu po obróceniu ekranu */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+/* --- tablet: węższe marginesy, niższy pasek, luźniejsze kolumny --- */
+@media (min-width: 721px) and (max-width: 1024px) {
+  :root { --page-margin: 32px; --nav-height: 88px; }
+  .bio-columns { gap: var(--space-md); }
+}
+/* logo na stronie startowej (jedna linia) nie dotyka krawędzi ekranu: najwyżej 86% szerokości */
+@media (min-width: 721px) {
+  .home-logo { max-width: 86vw; }
+}
+/* --- mniejszy tablet (pionowo): zdjęcie w bio nad tekstem, listy w dwóch kolumnach;
+       kafelki w dwóch kolumnach ustawia site.js (masonryColumns) --- */
+@media (min-width: 721px) and (max-width: 899px) {
+  .bio-top { grid-template-columns: 1fr; }
+  .bio-columns { grid-template-columns: 1fr 1fr; gap: var(--space-lg) var(--space-md); }
+}
+
+/* --- telefon trzymany poziomo (ekran niższy niż 500px): pasek niższy,
+       filtry i "inne projekty" przewijają się razem z treścią (nie zasłaniają
+       połowy ekranu), duże zdjęcie nie jest ściskane do wysokości okna --- */
+@media (max-height: 500px) {
+  :root { --nav-height: 64px; }
+  .navbar__logo { width: auto; max-width: 40%; }
+  .filters {
+    position: static;
+    padding-inline: 0;
+    padding-bottom: var(--space-sm);
+    box-shadow: none;
+  }
+  .back-bar { position: static; }
+  .work__hero > img, .work__video--file video { max-height: none; }
+  .work__video--ratio { width: 100%; }
+}
+
+/* --- wąski telefon (do 400px): gdy menu nie mieści się w jednej linii,
+       EN / PL schodzi do drugiego wiersza, wyrównanego do prawej --- */
+@media (max-width: 400px) {
+  .navbar__links { flex-wrap: wrap; justify-content: flex-end; row-gap: 8px; }
+  .navbar .lang-switch { margin-left: 0; }
+}
+
+/* --- starsze przeglądarki (np. Safari sprzed 2023): kropka komentarza i kolor
+       cytatu mają wartości zapasowe, gdy nowe jednostki nie są obsługiwane --- */
+.bio-more { font-size: 200px; }
+.bio-more { font-size: calc((100cqw - var(--space-lg)) / 2 * 0.0344 * 10); }
+@media (max-width: 720px) { .bio-more, .work__comment .bio-more { font-size: 240px; } }
+.bio-quote { color: var(--accent); }
+.bio-quote { color: color-mix(in srgb, var(--accent) 80%, #000); }

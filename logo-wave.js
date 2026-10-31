@@ -375,9 +375,11 @@
       var y = window.pageYOffset, d = y - lastScrollY;
       lastScrollY = y;
       if (!isTouch || !isOn || !rect || !d) return;
+      if (logo.classList.contains("wave-text")) return; // pasek WORK IN PROGRESS stoi spokojnie w miejscu
       var p = pointers.scroll || (pointers.scroll = { x: 0.5, y: 0.5, dx: 0, dy: 0, fresh: false });
       p.x = 0.2 + Math.random() * 0.6; p.y = 0.5;
-      p.dy = clamp(p.dy - d / Math.max(rect.height, 1) * cssNum("--logo-fluid-scroll", 0.1), -0.1, 0.1);
+      // przewijanie w dół → logo ucieka do góry (jak za palcem w drugą stronę)
+      p.dy = clamp(p.dy + d / Math.max(rect.height, 1) * cssNum("--logo-fluid-scroll", 0.1), -0.1, 0.1);
       p.dx = clamp(p.dx + (Math.random() - 0.5) * 0.01, -0.1, 0.1);
       lastInput = performance.now();
       wake();

@@ -75,6 +75,7 @@
       swirl: cssNum("--fluid-swirl", 20),
       chroma: cssNum("--fluid-chroma", 0.3),
       auto: cssNum(isTouch ? "--fluid-auto-mobile" : "--fluid-auto-desktop", isTouch ? 0.1 : 0),
+      autoSpeed: isTouch ? cssNum("--fluid-auto-speed-mobile", 1) : 1,
       menu: cssNum("--fluid-menu", 0.35),
       ripple: isTouch ? cssNum("--fluid-ripple", 0.05) : 0,
       ripSpeed: cssNum("--ripple-speed", 0.1), ripDecay: cssNum("--ripple-decay", 0.4),
@@ -603,10 +604,11 @@
     }
     // delikatny ruch sam z siebie
     if (P.auto > 0) {
-      var a = autoPoint(now / 1000);
+      var a = autoPoint(now / 1000 * P.autoSpeed);
       if (autoPrev) {
         // skok ograniczamy jak przy kursorze (np. po powrocie do karty minęło dużo czasu)
-        var adx = clamp(a.x - autoPrev.x, -0.01, 0.01), ady = clamp(a.y - autoPrev.y, -0.01, 0.01);
+        var lim = 0.01 * P.autoSpeed;
+        var adx = clamp(a.x - autoPrev.x, -lim, lim), ady = clamp(a.y - autoPrev.y, -lim, lim);
         splat(a.x, a.y, adx * FORCE * 0.35 * P.auto, ady * FORCE * 0.35 * P.auto, P);
       }
       autoPrev = a;

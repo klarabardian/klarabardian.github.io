@@ -325,9 +325,11 @@ function buildFilters(filters, active, onChange) {
 
   // pasek jest stale przyklejony pod menu, więc treść strony zaczyna się pod nim;
   // odstęp liczymy z jego wysokości (na wąskim ekranie napisy mogą się złamać)
+  // (na telefonie trzymanym poziomo pasek nie jest przyklejony — wtedy nic nie dodajemy)
   const page = bar.closest(".page");
+  const isFixed = () => getComputedStyle(bar).position === "fixed";
   const fitPage = () => {
-    if (page) page.style.paddingTop = `calc(var(--nav-height) + ${bar.offsetHeight}px + var(--space-sm))`;
+    if (page) page.style.paddingTop = isFixed() ? `calc(var(--nav-height) + ${bar.offsetHeight}px + var(--space-sm))` : "";
   };
   window.addEventListener("resize", fitPage);
   fitPage();
@@ -336,7 +338,7 @@ function buildFilters(filters, active, onChange) {
   const bioLink = document.querySelector('.navbar a.nav-link[href="bio"]');
   const alignToBio = () => {
     if (!bioLink) return;
-    bar.style.paddingRight = `${document.documentElement.clientWidth - bioLink.getBoundingClientRect().right}px`;
+    bar.style.paddingRight = isFixed() ? `${document.documentElement.clientWidth - bioLink.getBoundingClientRect().right}px` : "";
   };
   window.addEventListener("resize", alignToBio);
   if (document.fonts) document.fonts.ready.then(alignToBio);
@@ -357,8 +359,9 @@ function buildFilters(filters, active, onChange) {
 }
 
 // ile kolumn ma kafelkowa siatka — zgodnie z media queries w site.css
+// (telefon i mniejszy tablet: 2 kolumny; od 900px: 3)
 function masonryColumns() {
-  if (window.matchMedia("(max-width: 720px)").matches) return 2;
+  if (window.matchMedia("(max-width: 899px)").matches) return 2;
   return 3;
 }
 

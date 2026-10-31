@@ -21,7 +21,8 @@
   --fluid-chroma: 0.15;       /* rozszczepienie kolorów na krawędziach zniekształcenia */
   --fluid-menu: 0.35;         /* jak mocno napisy menu falują razem ze zdjęciem (0 = napisy sztywne, 1 = tak samo jak zdjęcie) */
   --fluid-auto-mobile: 0.1;   /* delikatny ruch sam z siebie na telefonie (0 = wyłączony, 0.1 = minimum) */
-  --fluid-auto-desktop: 0;    /* delikatny ruch sam z siebie na komputerze (0 = wyłączony) */
+  --fluid-auto-speed-mobile: 1; /* jak szybko wędruje ten ruch na telefonie (1 = normalnie, 2 = dwa razy szybciej) */
+  --fluid-auto-desktop: 0;  /* delikatny ruch sam z siebie na komputerze (0 = wyłączony) */
   --tile-fluid-strength: 0.14; /* kafelki list prac: moc zniekształcenia (0 = efekt wyłączony) */
   --tile-fluid-force: 0.8;     /* kafelki: jak mocno kursor popycha ciecz */
   --tile-fluid-radius: 2.5;    /* kafelki: wielkość śladu kursora (% wysokości ekranu) */
