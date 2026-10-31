@@ -20,32 +20,40 @@
      • użytkownik ma w systemie włączone "ogranicz ruch",
      • przeglądarka nie obsługuje potrzebnych funkcji WebGL,
      • zdjęcie się nie załaduje,
-     • komputer jest za słaby (klatki wolniejsze niż ok. 36/s nawet
-       po obniżeniu jakości — patrz QUALITY_LEVELS).
+     • sprzęt jest tak słaby, że nawet najniższa jakość nie działa, a w
+       tokens/fluid.css ustawiono --fluid-slow-mode: 0 (domyślnie 1:
+       efekt wtedy zostaje i rysuje się klatka po klatce).
    =================================================================== */
 
 (function () {
   "use strict";
 
   var IMAGE_SRC = "assets/hero-bg.jpg";
-  var PRESSURE_ITERATIONS = 20;   // dokładność "nieściśliwości" cieczy
   var MAX_DPR = 2;                // ograniczenie ostrości na ekranach Retina (oszczędza GPU)
 
-  // Ochrona słabszych komputerów: gdy klatki trwają za długo, schodzimy o stopień niżej
-  // (mniejsza dokładność symulacji i ostrość obrazu); gdy to nie pomaga — efekt się wyłącza
-  // i zostaje zwykłe zdjęcie. res = mnożnik --fluid-res, dpr = górna granica ostrości.
+  // Ochrona słabszych urządzeń: gdy klatki trwają za długo, schodzimy o stopień niżej
+  // (mniejsza dokładność symulacji, mniej obliczeń ciśnienia i mniejsza ostrość obrazu).
+  // Na samym dole efekt dalej działa (klatka po klatce, patrz --fluid-slow-mode), a nie znika.
+  // res = mnożnik --fluid-res, dpr = górna granica ostrości, iter = obliczenia ciśnienia.
   var QUALITY_LEVELS = [
-    { res: 1,    dpr: MAX_DPR },
-    { res: 0.75, dpr: 1.5 },
-    { res: 0.5,  dpr: 1 },
-    { res: 0.375, dpr: 0.75 }
+    { res: 1,     dpr: MAX_DPR, iter: 20 },
+    { res: 0.75,  dpr: 1.5,     iter: 14 },
+    { res: 0.5,   dpr: 1,       iter: 10 },
+    { res: 0.375, dpr: 0.75,    iter: 6 },
+    { res: 0.25,  dpr: 0.6,     iter: 4 },
+    { res: 0.2,   dpr: 0.5,     iter: 3 }
   ];
   var SLOW_FRAME_MS = 28;         // średnio wolniej niż ok. 36 klatek/s = za wolno...
   var CAPPED_MAX_MS = 38;         // ...chyba że klatki są równe, a średnia ≤ 38 ms: to stałe 30 klatek/s
   var STEADY_SPREAD_MS = 4;       //    narzucone przez system (oszczędzanie baterii), nie słabość sprzętu
   var WARMUP_FRAMES = 20;         // pierwsze klatki (kompilacja, start) nie liczą się do pomiaru
   var MEASURE_FRAMES = 40;        // z ilu klatek liczymy średnią
+  // Telefony z małą pamięcią lub małą liczbą rdzeni od razu startują z niższej jakości,
+  // żeby pierwsze sekundy nie szarpały; potem i tak działa automatyczna korekta.
   var qualityLevel = 0;
+  if (navigator.deviceMemory && navigator.deviceMemory <= 2) qualityLevel = 3;
+  else if (navigator.deviceMemory && navigator.deviceMemory <= 4) qualityLevel = 2;
+  else if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) qualityLevel = 1;
   var slowMode = false;           // bardzo wolny sprzęt: zostajemy przy najniższej jakości, klatka po klatce (--fluid-slow-mode)
   var hugeFrames = 0;             // ile klatek z rzędu trwało dłużej niż 1/4 s
 
@@ -84,7 +92,7 @@
       ripGap: cssNum("--ripple-gap", 0.2), ripWidth: cssNum("--ripple-width", 0.0059),
       ripFreq: cssNum("--ripple-freq", 70), ripDisp: cssNum("--ripple-disp", 0.08),
       ripShine: cssNum("--ripple-shine", 0.08), ripCount: cssNum("--ripple-count", 1),
-      res: Math.max(32, Math.min(512, Math.round(cssNum("--fluid-res", 128) * QUALITY_LEVELS[qualityLevel].res)))
+      res: Math.max(24, Math.min(512, Math.round(cssNum("--fluid-res", 128) * QUALITY_LEVELS[qualityLevel].res)))
     };
   }
 
@@ -101,21 +109,36 @@
   if (!gl) gl = canvas.getContext("webgl", attrs) || canvas.getContext("experimental-webgl", attrs);
   if (!gl) return;
 
-  var halfType, internalRGBA;
+  // Na słabych telefonach różnie bywa z teksturami zmiennoprzecinkowymi, więc zamiast jednego
+  // wariantu mamy listę: od najlepszego do najprostszego. Bierzemy pierwszy, który działa
+  // (patrz pickFormat niżej). Bez filtrowania liniowego obraz jest tylko mniej gładki.
+  var fmt = null;
+  var candidates = [];
   if (isGL2) {
-    if (!gl.getExtension("EXT_color_buffer_float")) return; // bez tego nie da się rysować do tekstur float
-    halfType = gl.HALF_FLOAT;
-    internalRGBA = gl.RGBA16F;
+    var cbf = gl.getExtension("EXT_color_buffer_float");
+    var cbh = gl.getExtension("EXT_color_buffer_half_float");
+    var f32lin = !!gl.getExtension("OES_texture_float_linear");
+    if (cbf || cbh) candidates.push({ internal: gl.RGBA16F, type: gl.HALF_FLOAT, linear: true });
+    if (cbf) candidates.push({ internal: gl.RGBA32F, type: gl.FLOAT, linear: f32lin });
   } else {
-    var ext = gl.getExtension("OES_texture_half_float");
-    if (!ext || !gl.getExtension("OES_texture_half_float_linear")) return;
-    halfType = ext.HALF_FLOAT_OES;
-    internalRGBA = gl.RGBA;
+    var eh = gl.getExtension("OES_texture_half_float");
+    var ehLin = !!gl.getExtension("OES_texture_half_float_linear");
+    var ef = gl.getExtension("OES_texture_float");
+    var efLin = !!gl.getExtension("OES_texture_float_linear");
+    gl.getExtension("EXT_color_buffer_half_float");
+    gl.getExtension("WEBGL_color_buffer_float");
+    if (eh) candidates.push({ internal: gl.RGBA, type: eh.HALF_FLOAT_OES, linear: ehLin });
+    if (ef) candidates.push({ internal: gl.RGBA, type: gl.FLOAT, linear: efLin });
   }
+  if (!candidates.length) return;
 
   /* ----------------------------------------------------------------
      Shadery (programy liczone na karcie graficznej)
      ---------------------------------------------------------------- */
+  // starsze telefony nie mają highp w shaderach fragmentów — wtedy mediump (mniej dokładnie, ale działa)
+  var hp = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
+  var PREC = hp && hp.precision > 0 ? "highp" : "mediump";
+
   var VERT = [
     "precision highp float;",
     "attribute vec2 aPosition;",
@@ -131,7 +154,7 @@
     "}"
   ].join("\n");
 
-  var HEAD = "precision highp float; precision highp sampler2D; varying vec2 vUv, vL, vR, vT, vB;\n";
+  var HEAD = "precision " + PREC + " float; precision " + PREC + " sampler2D; varying vec2 vUv, vL, vR, vT, vB;\n";
 
   // dodaje "pchnięcie" cieczy w punkcie (kursor)
   var FRAG_SPLAT = HEAD + [
@@ -338,11 +361,12 @@
     var tex = gl.createTexture();
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tex);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    var filter = fmt.linear ? gl.LINEAR : gl.NEAREST;
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texImage2D(gl.TEXTURE_2D, 0, internalRGBA, w, h, 0, gl.RGBA, halfType, null);
+    gl.texImage2D(gl.TEXTURE_2D, 0, fmt.internal, w, h, 0, gl.RGBA, fmt.type, null);
     var fbo = gl.createFramebuffer();
     gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
@@ -364,6 +388,14 @@
       swap: function () { var t = a; a = b; b = t; }
     };
   }
+
+  // sprawdza po kolei warianty tekstur i bierze pierwszy, do którego da się rysować
+  for (var ci = 0; ci < candidates.length && !fmt; ci++) {
+    fmt = candidates[ci];
+    var test = createFBO(4, 4);
+    if (!test.ok || gl.getError() !== gl.NO_ERROR) fmt = null;
+  }
+  if (!fmt) return;
 
   var sim = null;      // { velocity, disp, curl, divergence, pressure, res }
   function initSim(res) {
@@ -649,7 +681,7 @@
     pr = progs.pressure; gl.useProgram(pr.id);
     gl.uniform2f(pr.u.texelSize, ts[0], ts[1]);
     gl.uniform1i(pr.u.uDivergence, sim.divergence.attach(0));
-    for (var i = 0; i < PRESSURE_ITERATIONS; i++) {
+    for (var i = 0; i < QUALITY_LEVELS[qualityLevel].iter; i++) {
       gl.uniform1i(pr.u.uPressure, sim.pressure.read.attach(1));
       blit(sim.pressure.write); sim.pressure.swap();
     }
