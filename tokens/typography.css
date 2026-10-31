@@ -23,7 +23,7 @@
      Zdjęcie zajmuje pół kontenera; ta sama szerokość po podzieleniu przez
      ~12.52 (szerokość napisu przy foncie 1px) daje wielkość fontu.
      Na desktopie ≈ 43px (napis ≈ szerokość zdjęcia ≈ 544px). */
-  --size-logo: clamp(1.25rem, calc((min(100vw, 1280px) - 192px) / 25.04), 2.75rem);
+  --size-logo: calc(1rem + 2vw);  /* rośnie z szerokością ekranu; bez clamp()/min(), bo starsze przeglądarki ich nie znają */
   --size-headline: 1.5rem; /* 24px — nagłówki sekcji */
   --size-large: 1.25rem;   /* 20px — tekst duży (bio, opisy prac) */
   --size-body: 1rem;       /* 16px — tekst podstawowy i menu */

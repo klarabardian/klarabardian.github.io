@@ -34,6 +34,7 @@ a { color: inherit; text-decoration: none; }
   width: 100%;
   max-width: var(--content-max);
   margin-left: auto; margin-right: auto;
+  padding-left: 20px; padding-right: 20px;    /* wartość zapasowa dla przeglądarek bez zmiennych CSS */
   padding-left: var(--page-margin); padding-right: var(--page-margin);
   display: flex;
   align-items: center;
@@ -43,7 +44,7 @@ a { color: inherit; text-decoration: none; }
 /* logo w pasku — niewielkie, mieści się w jednej linii obok menu */
 .navbar__logo {
   font-weight: var(--weight-bold);
-  font-size: clamp(1rem, 2.2vw, 1.5rem); /* ~16px → 24px */
+  font-size: 1.25rem; font-size: clamp(1rem, 2.2vw, 1.5rem); /* ~16px → 24px; pierwsza wartość zapasowa dla starszych przeglądarek */
   letter-spacing: -0.03em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -75,7 +76,7 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
 }
 /* odstępy między pozycjami menu marginesem, nie "gap" (starsze przeglądarki) */
-.navbar__links > * + * { margin-left: clamp(10px, 1.5vw, 28px); }
+.navbar__links > * + * { margin-left: 16px; margin-left: clamp(10px, 1.5vw, 28px); }
 /* pojedynczy link menu — płynne pogrubienie BEZ przesuwania sąsiadów.
    Sztuczka: ukryty "duch" (::after) z tym samym tekstem w grubości Black
    rezerwuje z góry szerokość pogrubionej wersji, więc słowo tylko grubieje
@@ -124,7 +125,7 @@ a { color: inherit; text-decoration: none; }
 }
 .lang-opt:hover { color: var(--accent); }
 /* w pasku menu aktywny język to jasny napis na rdzawym kółku (zamiast kreski między EN a PL) */
-.navbar .lang-switch { margin-left: calc(clamp(10px, 1.5vw, 28px) + clamp(16px, 3vw, 56px)); } /* odsunięcie od nazw sekcji */
+.navbar .lang-switch { margin-left: 32px; margin-left: calc(clamp(10px, 1.5vw, 28px) + clamp(16px, 3vw, 56px)); } /* odsunięcie od nazw sekcji */
 .navbar .lang-switch > * + * { margin-left: 20px; }                                        /* odstęp EN od PL */
 .navbar .lang-opt { position: relative; }
 .navbar .lang-opt.is-active { color: var(--ink-on-dark); }
@@ -159,6 +160,8 @@ a { color: inherit; text-decoration: none; }
   left: 0; right: 0;
   z-index: 50;                     /* pod paskiem menu (100), nad kafelkami */
   /* te same odsunięcia co kontener treści, więc prawy koniec filtrów = koniec tekstu bio */
+  padding-left: 20px; padding-right: 20px;
+  padding-left: var(--page-margin); padding-right: var(--page-margin);
   padding-left: max(var(--page-margin), calc((100% - var(--content-max)) / 2 + var(--page-margin)));
   padding-right: max(var(--page-margin), calc((100% - var(--content-max)) / 2 + var(--page-margin)));
   padding-bottom: var(--filters-space, var(--space-md));  /* więcej powietrza między filtrami a kafelkami */
@@ -371,7 +374,7 @@ figure.photo { position: relative; margin: 0; }
 }
 .bio-more-row .bio-quote { margin: 0; }
 /* na podstronie pracy kółko tej samej wielkości co w bio (liczone z szerokości treści strony, nie z wąskiego bloku pracy) */
-.work__comment .bio-more { font-size: calc((min(100vw, var(--content-max)) - var(--space-lg)) / 2 * 0.0213 * 10); } /* o jeden stopień złotej proporcji mniejsze niż w bio: 0,618^8 */
+.work__comment .bio-more { font-size: 130px; font-size: calc((min(100vw, var(--content-max)) - var(--space-lg)) / 2 * 0.0213 * 10); } /* o jeden stopień złotej proporcji mniejsze niż w bio: 0,618^8 */
 .work__comment { margin-top: var(--space-md); margin-bottom: var(--space-md); }
 .bio-more:hover span, .bio-more:focus-visible span { transform: scale(1.15); }
 .bio-more:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
@@ -502,6 +505,7 @@ body.lightbox-open .to-top { display: none; }
    nie szersze niż kolumna i nie wyższe niż ekran */
 .work__video--ratio {
   aspect-ratio: var(--video-ratio);
+  width: 100%;
   width: min(100%, calc((100vh - var(--nav-height) - var(--space-lg) * 2) * var(--video-ratio)));
   margin-left: auto; margin-right: auto;
 }
@@ -538,6 +542,7 @@ body.lightbox-open .to-top { display: none; }
 .footer__inner {
   max-width: var(--content-max);
   margin-left: auto; margin-right: auto;
+  padding-left: 20px; padding-right: 20px;
   padding-left: var(--page-margin); padding-right: var(--page-margin);
   display: flex;
   align-items: center;
@@ -715,12 +720,13 @@ body.lightbox-open .to-top { display: none; }
   position: fixed; left: 0; right: 0; top: 50vh; top: 50svh; transform: translateY(-50%); /* svh: nie skacze, gdy pasek przeglądarki się chowa */
   z-index: 50; pointer-events: none;
   background: var(--accent); color: #fff;
+  padding-top: 18px; padding-bottom: 18px;
   padding-top: clamp(12px, 2.2vw, 30px); padding-bottom: clamp(12px, 2.2vw, 30px);
   text-align: center;
 }
 .wip-banner__text {
   display: block; margin: 0;
-  font-weight: var(--weight-black, 900); font-size: clamp(1.2rem, 4.5vw, 4rem);
+  font-weight: var(--weight-black, 900); font-size: 2rem; font-size: clamp(1.2rem, 4.5vw, 4rem);
   letter-spacing: -0.03em; text-transform: uppercase; white-space: nowrap; line-height: 1;
 }
 
@@ -753,7 +759,7 @@ body.lightbox-open .to-top { display: none; }
   --logo-fluid-swirl: 29; --logo-fluid-chroma: 0; --logo-fluid-res: 128;
 }
 @media (min-width: 721px) {
-  :root { --page-margin: 64px; --nav-height: 108px; }
+  /* --page-margin i --nav-height liczą się płynnie z szerokości ekranu (tokens/spacing.css) */
   .masonry { column-count: 3; }
   .navbar__logo { font-size: calc(var(--size-body) * 2.618); }
 }
@@ -835,7 +841,6 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 /* --- tablet: węższe marginesy, niższy pasek, luźniejsze kolumny --- */
 @media (min-width: 721px) and (max-width: 1024px) {
-  :root { --page-margin: 32px; --nav-height: 88px; }
   .bio-columns { gap: var(--space-md); }
 }
 /* logo na stronie startowej (jedna linia) nie dotyka krawędzi ekranu: najwyżej 86% szerokości */

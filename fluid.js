@@ -46,6 +46,8 @@
   var WARMUP_FRAMES = 20;         // pierwsze klatki (kompilacja, start) nie liczą się do pomiaru
   var MEASURE_FRAMES = 40;        // z ilu klatek liczymy średnią
   var qualityLevel = 0;
+  var slowMode = false;           // bardzo wolny sprzęt: zostajemy przy najniższej jakości, klatka po klatce (--fluid-slow-mode)
+  var hugeFrames = 0;             // ile klatek z rzędu trwało dłużej niż 1/4 s
 
   // Okręgi na wodzie po dotknięciu palcem — TYLKO na telefonie/tablecie (ekran dotykowy).
   // To osobny wzór nakładany na zdjęcie, niezależny od symulacji płynu. Wartości: --fluid-ripple
@@ -713,7 +715,13 @@
 
   // mierzy płynność; przy słabym sprzęcie obniża jakość, a na końcu wyłącza efekt
   function checkPerformance(frameMs) {
-    if (frameMs > 250) { resetMeasure(); return; } // przerwa (np. inna karta), nie wolny sprzęt
+    if (slowMode) return;
+    if (frameMs > 250) {
+      // jedna długa klatka to przerwa (np. inna karta); trzy z rzędu to naprawdę wolny sprzęt (np. czytnik e-ink)
+      if (++hugeFrames < 3) { resetMeasure(); return; }
+      hugeFrames = 0; degrade(frameMs); return;
+    }
+    hugeFrames = 0;
     if (warmup > 0) { warmup--; return; }
     measured++; measuredMs += frameMs; measuredSq += frameMs * frameMs;
     if (measured < MEASURE_FRAMES) return;
@@ -722,10 +730,17 @@
     resetMeasure();
     if (avg <= SLOW_FRAME_MS) return;
     if (avg <= CAPPED_MAX_MS && spread <= STEADY_SPREAD_MS) return; // równe 30 klatek/s z systemu
+    degrade(avg);
+  }
+  // o stopień niżej; na samym dole: albo rysujemy poklatkowo (--fluid-slow-mode: 1), albo wyłączamy efekt
+  function degrade(avg) {
     if (qualityLevel < QUALITY_LEVELS.length - 1) {
       qualityLevel++;
       sim = null; // bufory budujemy od nowa w niższej rozdzielczości
       console.info("fluid.js: wolne klatki (" + avg.toFixed(0) + " ms), obniżam jakość do stopnia " + qualityLevel);
+    } else if (cssNum("--fluid-slow-mode", 1) > 0) {
+      slowMode = true;
+      console.info("fluid.js: sprzęt bardzo wolny (" + avg.toFixed(0) + " ms/klatkę), zostaję przy najniższej jakości, klatka po klatce.");
     } else {
       console.info("fluid.js: sprzęt za słaby (" + avg.toFixed(0) + " ms/klatkę), wyłączam efekt.");
       giveUp();
@@ -742,7 +757,7 @@
   function frame(now) {
     if (!imageTex || dead) { running = false; return; }
     var frameMs = now - lastTime;
-    var dt = Math.min(frameMs / 1000, 1 / 30);
+    var dt = Math.min(frameMs / 1000, slowMode ? 1 / 10 : 1 / 30); // poklatkowo: dłuższy krok, żeby ciecz nie stała w miejscu
     lastTime = now;
     checkPerformance(frameMs);
     if (dead) return;

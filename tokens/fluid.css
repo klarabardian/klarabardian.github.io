@@ -38,6 +38,8 @@
   --ripple-width: 0.0059;     /* okręgi: grubość fali */
   --ripple-freq: 70;          /* okręgi: gęstość prążków w fali */
   --fluid-res: 128;           /* dokładność symulacji (większa = ładniej, ale wolniej) */
+  --fluid-slow-mode: 1;       /* bardzo wolny sprzęt (np. czytnik e-ink): 1 = efekt zostaje w najniższej jakości i rysuje
+                                 klatka po klatce; 0 = efekt się wyłącza i zostaje zwykłe zdjęcie (dotyczy wszystkich efektów) */
 }
 
 /* ============================================================

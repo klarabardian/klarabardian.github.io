@@ -387,15 +387,35 @@
     return { gl: gl, progs: progs, blit: blit, initSim: initSim, step: step, imageTexture: imageTexture };
   }
 
-  /* pomiar szybkości klatek: najpierw obniżamy jakość, a gdy to nie pomaga — wyłączamy */
+  /* pomiar szybkości klatek: najpierw obniżamy jakość, a gdy to nie pomaga — zostajemy przy
+     najniższej i rysujemy klatka po klatce (--fluid-slow-mode: 1) albo wyłączamy efekt (0) */
   function makePerfMeter(onSlower, onGiveUp) {
-    var warmup, measured, measuredMs, measuredSq;
+    var warmup, measured, measuredMs, measuredSq, huge = 0, slow = false;
     function reset() { warmup = WARMUP_FRAMES; measured = 0; measuredMs = 0; measuredSq = 0; }
+    function degrade(avg, level) {
+      if (level < QUALITY_LEVELS.length - 1) {
+        console.info("photo-fluid.js: wolne klatki (" + avg.toFixed(0) + " ms), obniżam jakość do stopnia " + (level + 1));
+        onSlower();
+      } else if (cssNum("--fluid-slow-mode", 1) > 0) {
+        slow = true;
+        console.info("photo-fluid.js: sprzęt bardzo wolny (" + avg.toFixed(0) + " ms/klatkę), zostaję przy najniższej jakości, klatka po klatce.");
+      } else {
+        console.info("photo-fluid.js: sprzęt za słaby (" + avg.toFixed(0) + " ms/klatkę), wyłączam efekt.");
+        onGiveUp();
+      }
+    }
     reset();
     return {
       reset: reset,
+      slow: function () { return slow; },
       check: function (frameMs, level) {
-        if (frameMs > 250) { reset(); return; }
+        if (slow) return;
+        if (frameMs > 250) {
+          // jedna długa klatka to przerwa (np. inna karta); trzy z rzędu to naprawdę wolny sprzęt (np. czytnik e-ink)
+          if (++huge < 3) { reset(); return; }
+          huge = 0; degrade(frameMs, level); return;
+        }
+        huge = 0;
         if (warmup > 0) { warmup--; return; }
         measured++; measuredMs += frameMs; measuredSq += frameMs * frameMs;
         if (measured < MEASURE_FRAMES) return;
@@ -404,13 +424,7 @@
         reset();
         if (avg <= SLOW_FRAME_MS) return;
         if (avg <= CAPPED_MAX_MS && spread <= STEADY_SPREAD_MS) return;
-        if (level < QUALITY_LEVELS.length - 1) {
-          console.info("photo-fluid.js: wolne klatki (" + avg.toFixed(0) + " ms), obniżam jakość do stopnia " + (level + 1));
-          onSlower();
-        } else {
-          console.info("photo-fluid.js: sprzęt za słaby (" + avg.toFixed(0) + " ms/klatkę), wyłączam efekt.");
-          onGiveUp();
-        }
+        degrade(avg, level);
       }
     };
   }
@@ -529,7 +543,7 @@
     function frame(now) {
       if (!imageTex || dead || !visible) { running = false; return; }
       var frameMs = now - lastTime;
-      var dt = Math.min(frameMs / 1000, 1 / 30);
+      var dt = Math.min(frameMs / 1000, perf.slow() ? 1 / 10 : 1 / 30); // poklatkowo: dłuższy krok
       lastTime = now;
       perf.check(frameMs, qualityLevel);
       if (dead) return;
@@ -751,7 +765,7 @@
       if (dead) return;
       if (document.hidden) { running = false; return; }
       var frameMs = now - lastTime;
-      var dt = Math.min(frameMs / 1000, 1 / 30);
+      var dt = Math.min(frameMs / 1000, perf.slow() ? 1 / 10 : 1 / 30); // poklatkowo: dłuższy krok
       lastTime = now;
       perf.check(frameMs, qualityLevel);
       if (dead) return;

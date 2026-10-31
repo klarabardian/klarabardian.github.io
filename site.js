@@ -14,10 +14,18 @@
    =================================================================== */
 
 /* -------------------------------------------------------------------
-   JĘZYK — odczyt / zapis. Domyślnie angielski (EN).
+   JĘZYK — odczyt / zapis.
+   Przy pierwszym wejściu: polski, gdy przeglądarka (telefon / komputer)
+   ma ustawiony polski; w każdym innym przypadku angielski.
    Zapamiętujemy wybór w przeglądarce (localStorage), żeby po przejściu
-   na inną podstronę język się nie resetował.
+   na inną podstronę język się nie resetował — zapisany wybór ma
+   pierwszeństwo przed językiem przeglądarki.
    ------------------------------------------------------------------- */
+function browserLang() {
+  // lista języków przeglądarki (np. ["pl-PL", "en-US"]); liczy się pierwszy
+  const langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ""];
+  return /^pl\b/i.test(langs[0] || "") ? "pl" : "en";
+}
 function getLang() {
   // adres ?lang=pl albo ?lang=en ma pierwszeństwo i od razu się zapamiętuje
   const fromUrl = new URLSearchParams(location.search).get("lang");
@@ -25,7 +33,7 @@ function getLang() {
     try { localStorage.setItem("zkb-lang", fromUrl); } catch (e) {}
     return fromUrl;
   }
-  try { return localStorage.getItem("zkb-lang") || "en"; } catch (e) { return "en"; }
+  try { return localStorage.getItem("zkb-lang") || browserLang(); } catch (e) { return browserLang(); }
 }
 function setLang(lang) {
   try { localStorage.setItem("zkb-lang", lang); } catch (e) {}

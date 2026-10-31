@@ -13,9 +13,11 @@
   --phi: 1.618;              /* złota proporcja — używana w panelu „Złota proporcja” i odstępach zdjęć */
   --grid-columns: 12; /* @kind other */ /* liczba kolumn na desktopie */
   --grid-gap: 15px;          /* odstęp między kolumnami (gutter) — możesz zmienić */
-  --page-margin: 64px;       /* margines strony po bokach (desktop) */
+  /* margines strony po bokach i wysokość paska rosną płynnie z szerokością ekranu
+     (telefon ~20px / 65px, tablet ~35px / 83px); na dużym ekranie ograniczone niżej (@media) */
+  --page-margin: calc(8px + 3.5vw);
+  --nav-height: calc(48px + 4.5vw);
   --content-max: 1280px;     /* maksymalna szerokość treści */
-  --nav-height: 108px;       /* wysokość paska nawigacji */
 
   /* drobne, powtarzalne odstępy pionowe */
   --space-xs: 8px;
@@ -29,11 +31,16 @@
   --radius-img: 2px;         /* leciutkie zaokrąglenie zdjęć, prawie niewidoczne */
 }
 
+/* górne ograniczenie marginesu i paska na szerokich ekranach (tyle, ile wychodzi ze wzoru przy tej szerokości) */
+@media (min-width: 1333px) { :root { --nav-height: 108px; } }
+@media (min-width: 1600px) { :root { --page-margin: 64px; } }
+
 /* Kontener wyśrodkowujący treść z marginesami po bokach */
 .container {
   width: 100%;
   max-width: var(--content-max);
   margin-left: auto; margin-right: auto;      /* (zamiast margin-inline — starsze przeglądarki) */
+  padding-left: 20px; padding-right: 20px;    /* wartość zapasowa dla przeglądarek bez zmiennych CSS */
   padding-left: var(--page-margin); padding-right: var(--page-margin);
   box-sizing: border-box;
 }
@@ -46,11 +53,7 @@
   gap: var(--grid-gap);
 }
 
-/* WERSJA MOBILNA — siatka 2 kolumny i węższe marginesy */
+/* WERSJA MOBILNA — siatka 2 kolumny (marginesy i pasek liczą się płynnie, patrz wyżej) */
 @media (max-width: 720px) {
-  :root {
-    --page-margin: 20px;
-    --nav-height: 64px;
-  }
   .grid { grid-template-columns: repeat(2, 1fr); }
 }

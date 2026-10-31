@@ -7,9 +7,9 @@
    Kolejność ma znaczenie — najpierw fonty i zmienne, potem reszta.
    ============================================================ */
 
-@import "tokens/fonts.css";        /* deklaracja fontu Figtree */
-@import "tokens/colors.css";       /* paleta kolorów */
-@import "tokens/typography.css";   /* style tekstu */
-@import "tokens/spacing.css";      /* siatka 12 kolumn i odstępy */
-@import "tokens/fluid.css";        /* efekt płynu na stronie startowej */
-@import "site.css";                /* style komponentów strony (nawigacja, kafelki, stopka...) */
+@import "tokens/fonts.css?v=20261101";        /* deklaracja fontu Figtree */
+@import "tokens/colors.css?v=20261101";       /* paleta kolorów */
+@import "tokens/typography.css?v=20261101";   /* style tekstu */
+@import "tokens/spacing.css?v=20261101";      /* siatka 12 kolumn i odstępy */
+@import "tokens/fluid.css?v=20261101";        /* efekt płynu na stronie startowej */
+@import "site.css?v=20261101";                /* style komponentów strony (nawigacja, kafelki, stopka...) */

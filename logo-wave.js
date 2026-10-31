@@ -39,6 +39,7 @@
   var PRESSURE_ITERATIONS = 16;  // dokładność "nieściśliwości" cieczy
   var SLOW_FRAME_MS = 40;        // średnio wolniej niż 25 klatek/s = wyłączamy
   var MEASURE_FRAMES = 40;
+  var slowMode = false;          // bardzo wolny sprzęt: rysujemy klatka po klatce zamiast wyłączać (--fluid-slow-mode)
 
   if (!document.body || document.body.classList.contains("home")) return;
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -521,7 +522,7 @@
     function frame(now) {
       if (dead) { running = false; return; }
       var frameMs = now - lastTime;
-      var dt = Math.min(frameMs / 1000, 1 / 30);
+      var dt = Math.min(frameMs / 1000, slowMode ? 1 / 10 : 1 / 30);
       lastTime = now;
       var P = readParams();
       setOn(P.on);
@@ -542,12 +543,15 @@
       var idleAfter = slowest > 0 ? Math.min(120, 2 + 8 / slowest) : 120;
       if (now - lastInput > idleAfter * 1000) { running = false; return; }
 
-      // bardzo wolny komputer → wyłączamy efekt
-      if (frameMs < 250) {
+      // bardzo wolny komputer → rysujemy poklatkowo (--fluid-slow-mode: 1) albo wyłączamy efekt (0)
+      if (!slowMode && frameMs < 250) {
         if (warmup > 0) warmup--;
         else { measured++; measuredMs += frameMs; }
         if (measured >= MEASURE_FRAMES) {
-          if (measuredMs / measured > SLOW_FRAME_MS) { console.info("logo-wave.js: wolne klatki, wyłączam efekt logo."); giveUp(); return; }
+          if (measuredMs / measured > SLOW_FRAME_MS) {
+            if (cssNum("--fluid-slow-mode", 1) > 0) { slowMode = true; console.info("logo-wave.js: wolne klatki, logo rysuję klatka po klatce."); }
+            else { console.info("logo-wave.js: wolne klatki, wyłączam efekt logo."); giveUp(); return; }
+          }
           measured = 0; measuredMs = 0;
         }
       }
