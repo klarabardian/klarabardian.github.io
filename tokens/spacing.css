@@ -33,8 +33,8 @@
 .container {
   width: 100%;
   max-width: var(--content-max);
-  margin-inline: auto;
-  padding-inline: var(--page-margin);
+  margin-left: auto; margin-right: auto;      /* (zamiast margin-inline — starsze przeglądarki) */
+  padding-left: var(--page-margin); padding-right: var(--page-margin);
   box-sizing: border-box;
 }
 

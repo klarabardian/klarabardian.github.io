@@ -33,8 +33,8 @@ a { color: inherit; text-decoration: none; }
 .navbar__inner {
   width: 100%;
   max-width: var(--content-max);
-  margin-inline: auto;
-  padding-inline: var(--page-margin);
+  margin-left: auto; margin-right: auto;
+  padding-left: var(--page-margin); padding-right: var(--page-margin);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -73,8 +73,9 @@ a { color: inherit; text-decoration: none; }
 .navbar__links {
   display: flex;
   align-items: center;
-  gap: clamp(10px, 1.5vw, 28px);
 }
+/* odstępy między pozycjami menu marginesem, nie "gap" (starsze przeglądarki) */
+.navbar__links > * + * { margin-left: clamp(10px, 1.5vw, 28px); }
 /* pojedynczy link menu — płynne pogrubienie BEZ przesuwania sąsiadów.
    Sztuczka: ukryty "duch" (::after) z tym samym tekstem w grubości Black
    rezerwuje z góry szerokość pogrubionej wersji, więc słowo tylko grubieje
@@ -104,7 +105,8 @@ a { color: inherit; text-decoration: none; }
 
 /* przełącznik języka EN | PL — ta sama sztuczka z "duchem", żeby aktywny
    wariant w grubości Black nie przesuwał drugiego */
-.lang-switch { display: flex; align-items: center; gap: 12px; white-space: nowrap; }
+.lang-switch { display: flex; align-items: center; white-space: nowrap; }
+.lang-switch > * + * { margin-left: 12px; }
 .lang-switch .sep { color: var(--ink); opacity: .4; }
 .lang-opt {
   display: inline-grid;
@@ -122,7 +124,8 @@ a { color: inherit; text-decoration: none; }
 }
 .lang-opt:hover { color: var(--accent); }
 /* w pasku menu aktywny język to jasny napis na rdzawym kółku (zamiast kreski między EN a PL) */
-.navbar .lang-switch { margin-left: clamp(16px, 3vw, 56px); gap: 20px; } /* odsunięcie od nazw sekcji i od siebie EN/PL */
+.navbar .lang-switch { margin-left: calc(clamp(10px, 1.5vw, 28px) + clamp(16px, 3vw, 56px)); } /* odsunięcie od nazw sekcji */
+.navbar .lang-switch > * + * { margin-left: 20px; }                                        /* odstęp EN od PL */
 .navbar .lang-opt { position: relative; }
 .navbar .lang-opt.is-active { color: var(--ink-on-dark); }
 .navbar .lang-opt.is-active::before {
@@ -156,7 +159,8 @@ a { color: inherit; text-decoration: none; }
   left: 0; right: 0;
   z-index: 50;                     /* pod paskiem menu (100), nad kafelkami */
   /* te same odsunięcia co kontener treści, więc prawy koniec filtrów = koniec tekstu bio */
-  padding-inline: max(var(--page-margin), calc((100% - var(--content-max)) / 2 + var(--page-margin)));
+  padding-left: max(var(--page-margin), calc((100% - var(--content-max)) / 2 + var(--page-margin)));
+  padding-right: max(var(--page-margin), calc((100% - var(--content-max)) / 2 + var(--page-margin)));
   padding-bottom: var(--filters-space, var(--space-md));  /* więcej powietrza między filtrami a kafelkami */
   background: var(--bg-page);
   /* tło lekko wystaje na boki, żeby brzeg zdjęcia przewijanego pod paskiem nie prześwitywał
@@ -170,11 +174,10 @@ a { color: inherit; text-decoration: none; }
   flex-wrap: wrap;                 /* na wąskim ekranie łamie się do kilku linii */
   justify-content: flex-end;       /* słowa wyrównane do prawej */
   align-items: center;
-  gap: 0.35em var(--filters-gap, clamp(14px, 2vw, 32px));
   width: fit-content;
   max-width: 100%;
   margin-left: auto;
-  padding-top: var(--space-sm);
+  padding-top: calc(var(--space-sm) - 0.35em);   /* minus górny margines przycisków */
   /* krótka kreska tuż pod menu, tej długości co napisy */
   border-top: 1px solid var(--accent);
 }
@@ -186,7 +189,7 @@ a { color: inherit; text-decoration: none; }
   background: none;
   border: 0;
   padding: 0;
-  margin: 0;
+  margin: 0.35em 0 0;              /* odstęp między wierszami, gdy filtry się łamią */
   font: inherit;
   font-size: calc(var(--size-body) * .8);
   letter-spacing: -0.005em;
@@ -202,6 +205,7 @@ a { color: inherit; text-decoration: none; }
   font-weight: 900;
   height: 0; overflow: hidden; visibility: hidden; pointer-events: none;
 }
+.filter-btn + .filter-btn { margin-left: var(--filters-gap, clamp(14px, 2vw, 32px)); } /* odstęp między słowami */
 .filter-btn:hover,
 .filter-btn.is-active { color: var(--accent); font-variation-settings: "wght" 900; }
 
@@ -212,12 +216,12 @@ a { color: inherit; text-decoration: none; }
 .masonry {
   display: flex;
   align-items: flex-start;         /* kolumny nie rozciągają się do najwyższej */
-  gap: var(--grid-gap);            /* odstęp = gutter z siatki */
 }
 .masonry__col {
   flex: 1 1 0;
   min-width: 0;
 }
+.masonry__col + .masonry__col { margin-left: var(--grid-gap); } /* odstęp = gutter z siatki */
 .tile {
   break-inside: avoid;             /* nie tnij kafelka między kolumnami */
   margin-bottom: var(--space-md);
@@ -250,7 +254,7 @@ a { color: inherit; text-decoration: none; }
 /* zamiast powiększenia: lekki efekt płynu pod kursorem (photo-fluid.js). Jedna kanwa na cały
    ekran rysuje kafelki w pobliżu kursora; pod paskiem nawigacji i pod podpisem fotografa */
 .tile-fluid-canvas {
-  position: fixed; inset: 0; z-index: 1;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1;
   width: 100%; height: 100%;
   display: block;
   pointer-events: none;
@@ -274,14 +278,13 @@ a { color: inherit; text-decoration: none; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
   background: var(--bg-home);       /* kremowy blok */
   color: var(--accent);
   text-align: center;
   padding: var(--space-md);
 }
 .tile--soon .soon-title { font-weight: var(--weight-black); }
-.tile--soon .soon-sub { font-size: var(--size-body); color: var(--ink); opacity: .55; }
+.tile--soon .soon-sub { margin-top: 6px; font-size: var(--size-body); color: var(--ink); opacity: .55; }
 
 /* ===================================================================
    PODPIS FOTOGRAFA — pojawia się po najechaniu kursorem na zdjęcie
@@ -320,7 +323,7 @@ figure.photo { position: relative; margin: 0; }
    wielkości; sam obrazek zostaje pod spodem jako wersja zapasowa */
 .fluid-photo-wrap { position: relative; display: block; touch-action: pinch-zoom; }
 .fluid-photo-canvas {
-  position: absolute; inset: 0;
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
   width: 100%; height: 100%;
   display: block;
   border-radius: var(--radius-img);
@@ -369,7 +372,7 @@ figure.photo { position: relative; margin: 0; }
 .bio-more-row .bio-quote { margin: 0; }
 /* na podstronie pracy kółko tej samej wielkości co w bio (liczone z szerokości treści strony, nie z wąskiego bloku pracy) */
 .work__comment .bio-more { font-size: calc((min(100vw, var(--content-max)) - var(--space-lg)) / 2 * 0.0213 * 10); } /* o jeden stopień złotej proporcji mniejsze niż w bio: 0,618^8 */
-.work__comment { margin-block: var(--space-md); }
+.work__comment { margin-top: var(--space-md); margin-bottom: var(--space-md); }
 .bio-more:hover span, .bio-more:focus-visible span { transform: scale(1.15); }
 .bio-more:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
@@ -390,13 +393,13 @@ figure.photo { position: relative; margin: 0; }
 /* ===================================================================
    PODSTRONA PROJEKTU (artwork site)
    =================================================================== */
-.work { max-width: calc(var(--content-max) * 0.887); margin-inline: auto; } /* minimalnie węższa niż strony sekcji: 0,618^(1/4) */
+.work { max-width: calc(var(--content-max) * 0.887); margin-left: auto; margin-right: auto; } /* minimalnie węższa niż strony sekcji: 0,618^(1/4) */
 .work__hero { width: 100%; margin: 0 0 var(--space-md); }
 /* zdjęcie główne zawsze mieści się w oknie (pionowe nie rozciąga się na kilka ekranów) */
 .work__hero > img {
   display: block; width: auto; height: auto; max-width: 100%;
   max-height: calc(100vh - var(--nav-height) - var(--space-lg) * 2);
-  margin-inline: auto; border-radius: var(--radius-img);
+  margin-left: auto; margin-right: auto; border-radius: var(--radius-img);
 }
 /* praca z "heroFull: true": zdjęcie główne na całą szerokość, bez ograniczenia wysokości */
 .work__hero--full > img { width: 100%; max-height: none; }
@@ -427,7 +430,7 @@ figure.photo { position: relative; margin: 0; }
 
 /* zdjęcie na cały ekran */
 .lightbox {
-  position: fixed; inset: 0; z-index: 1000;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000;
   display: none; align-items: center; justify-content: center;
   background: var(--bg-page); cursor: zoom-out;
 }
@@ -480,10 +483,10 @@ body.lightbox-open .to-top { display: none; }
 .work__coauthors + .work__video { margin-top: 0; }
 /* film tuż pod tytułem i rodzajem pracy: odstęp tylko z marginesu rodzaju */
 .work__meta + .work__video { margin-top: 0; }
-.work__video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.work__video iframe { position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; border: 0; }
 /* okładka z przyciskiem play; prawdziwy odtwarzacz YouTube ładuje się po kliknięciu */
 .work__video-play {
-  position: absolute; inset: 0; width: 100%; height: 100%; padding: 0;
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; padding: 0;
   border: 0; background: #000; cursor: pointer;
 }
 .work__video-play img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .2s; }
@@ -500,7 +503,7 @@ body.lightbox-open .to-top { display: none; }
 .work__video--ratio {
   aspect-ratio: var(--video-ratio);
   width: min(100%, calc((100vh - var(--nav-height) - var(--space-lg) * 2) * var(--video-ratio)));
-  margin-inline: auto;
+  margin-left: auto; margin-right: auto;
 }
 /* własny plik filmu: proporcje z filmu, pionowy nie wychodzi poza ekran */
 .work__video--file { aspect-ratio: auto; text-align: center; }
@@ -509,7 +512,7 @@ body.lightbox-open .to-top { display: none; }
 .work__video--file video {
   display: block; width: auto; height: auto; max-width: 100%;
   max-height: calc(100vh - var(--nav-height) - var(--space-lg) * 2);
-  margin-inline: auto; border-radius: var(--radius-img); background: #000;
+  margin-left: auto; margin-right: auto; border-radius: var(--radius-img); background: #000;
 }
 .back-bar {
   /* „inne projekty” przykleja się pod paskiem menu, gdy przewijamy podstronę w dół */
@@ -534,23 +537,23 @@ body.lightbox-open .to-top { display: none; }
 }
 .footer__inner {
   max-width: var(--content-max);
-  margin-inline: auto;
-  padding-inline: var(--page-margin);
+  margin-left: auto; margin-right: auto;
+  padding-left: var(--page-margin); padding-right: var(--page-margin);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-md);
 }
 .footer__copy { font-size: var(--size-body); color: var(--ink); }
-.footer__social { display: flex; align-items: center; flex-wrap: nowrap; gap: var(--space-sm); }
+.footer__social { display: flex; align-items: center; flex-wrap: nowrap; }
+.footer__social > * + * { margin-left: var(--space-sm); }
 /* link e-mail: ikona koperty + adres tekstem (obok ikon social) */
 .footer__mail {
-  display: inline-flex; align-items: center; gap: 7px;
+  display: inline-flex; align-items: center;
   color: var(--ink);
   font-size: var(--size-body);
   transition: color .3s ease;
 }
-.footer__mail svg { width: 22px; height: 22px; flex: none; }
+.footer__mail svg { width: 22px; height: 22px; flex: none; margin-right: 7px; }
 .footer__mail:hover { color: var(--accent); }
 /* ikony-tylko (Instagram / YouTube / LinkedIn) — zmiana koloru + delikatne
    powiększenie przy najechaniu (bez podskakiwania), jak menu nawigacyjne */
@@ -582,7 +585,7 @@ body.lightbox-open .to-top { display: none; }
 }
 /* kanwa z efektem płynu — pod przyciemnieniem i pod menu */
 .home-fluid {
-  position: fixed; inset: 0; z-index: 0;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0;
   width: 100%; height: 100%;
   display: block;
   pointer-events: none;
@@ -599,13 +602,13 @@ body.lightbox-open .to-top { display: none; }
 /* przyciemnienie zdjęcia, żeby kremowe menu było czytelne */
 .home::before {
   content: "";
-  position: fixed; inset: 0; z-index: 1;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1;
   background: rgba(0, 0, 0, .38);
 }
 /* logo dokładnie na środku ekranu, menu pod nim (3 wiersze: pusty / logo / menu) */
 #home-nav {
   position: fixed;
-  inset: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   z-index: 2;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -638,11 +641,11 @@ body.lightbox-open .to-top { display: none; }
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--space-lg);
 }
 .home-link {
   display: inline-grid;
   justify-items: center;
+  margin: 0 calc(var(--space-lg) / 2) var(--space-lg); /* odstępy między odnośnikami i między wierszami */
   font-size: var(--size-large);
   letter-spacing: -0.005em;
   font-variation-settings: "wght" 500;
@@ -677,8 +680,8 @@ body.lightbox-open .to-top { display: none; }
   position: absolute;
   top: var(--space-md);
   right: var(--space-md);
-  gap: var(--space-md);
 }
+.home-lang > * + * { margin-left: var(--space-md); }
 .home-lang .lang-opt { position: relative; }
 .home-lang .lang-opt.is-active::before {
   content: "";
@@ -700,9 +703,10 @@ body.lightbox-open .to-top { display: none; }
   .bio-columns { grid-template-columns: 1fr; gap: var(--space-lg); }
   .work__gallery, .work__gallery--row { grid-template-columns: 1fr; }
   .navbar__inner { gap: var(--space-sm); }
-  .navbar__links { gap: var(--space-sm); }
+  .navbar__links > * + * { margin-left: var(--space-sm); }
   .nav-link, .lang-switch { font-size: 0.8rem; }
-  .footer__inner { flex-direction: column; align-items: flex-start; gap: var(--space-sm); }
+  .footer__inner { flex-direction: column; align-items: flex-start; }
+  .footer__social { margin-top: var(--space-sm); }
   .footer__social { flex-wrap: wrap; }
 }
 
@@ -711,7 +715,7 @@ body.lightbox-open .to-top { display: none; }
   position: fixed; left: 0; right: 0; top: 50vh; top: 50svh; transform: translateY(-50%); /* svh: nie skacze, gdy pasek przeglądarki się chowa */
   z-index: 50; pointer-events: none;
   background: var(--accent); color: #fff;
-  padding-block: clamp(12px, 2.2vw, 30px);
+  padding-top: clamp(12px, 2.2vw, 30px); padding-bottom: clamp(12px, 2.2vw, 30px);
   text-align: center;
 }
 .wip-banner__text {
@@ -776,7 +780,8 @@ body.lightbox-open .to-top { display: none; }
 @media (max-width: 720px) {
   /* strona startowa: Zuzanna / Klara / Bardian jedno pod drugim, na środku ekranu */
   #home-nav > .home-logo-stack { grid-row: 2; align-self: center; }
-  .home-logo-stack { display: flex; flex-direction: column; align-items: center; gap: 1.1em; }
+  .home-logo-stack { display: flex; flex-direction: column; align-items: center; }
+  .home-logo-stack .home-logo + .home-logo { margin-top: calc(var(--size-body) * 1.1); } /* odstęp liczony z tekstu podstawowego, nie z malutkiego fontu logo */
   .home-logo-stack .home-logo { display: block; line-height: 0; font-size: 1.1vw; } /* 1em = 1/100 szerokości słowa w pliku logo */
   .home-logo-stack .logo-img { height: auto; }
   .home-logo--w1 .logo-img { width: 58.2em; }
@@ -784,7 +789,7 @@ body.lightbox-open .to-top { display: none; }
   .home-logo--w3 .logo-img { width: 50.7em; }
 
   /* sekcje: mniejsze zdjęcia w dwóch kolumnach; podstrony pracy zostają jednokolumnowe */
-  .masonry { gap: 12px; }
+  .masonry__col + .masonry__col { margin-left: 12px; }
   .tile { margin-bottom: calc(var(--size-body) * 1.1); }
   .tile__caption { font-size: calc(var(--size-body) * .85); }
 
@@ -806,7 +811,7 @@ body.lightbox-open .to-top { display: none; }
 @media (max-width: 720px) {
   /* logo w pasku: trzy słowa jedno pod drugim, do lewej */
   .navbar__logo-stack { display: flex; flex-direction: column; align-items: flex-start; flex: none; }
-  .navbar__logo-w { display: block; line-height: 0; font-size: 1.3px; margin-block: .9em; } /* 1em = 1 jednostka pliku logo */
+  .navbar__logo-w { display: block; line-height: 0; font-size: 1.3px; margin-top: .9em; margin-bottom: .9em; } /* 1em = 1 jednostka pliku logo */
   .navbar__logo-w:first-child { margin-top: 0; } .navbar__logo-w:last-child { margin-bottom: 0; }
   .navbar__logo-w .logo-img { height: auto; max-width: none; }
   .navbar__logo-w:nth-child(1) .logo-img { width: 58.2em; }
@@ -852,7 +857,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   .navbar__logo { width: auto; max-width: 40%; }
   .filters {
     position: static;
-    padding-inline: 0;
+    padding-left: 0; padding-right: 0;
     padding-bottom: var(--space-sm);
     box-shadow: none;
   }
@@ -864,8 +869,9 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 /* --- wąski telefon (do 400px): gdy menu nie mieści się w jednej linii,
        EN / PL schodzi do drugiego wiersza, wyrównanego do prawej --- */
 @media (max-width: 400px) {
-  .navbar__links { flex-wrap: wrap; justify-content: flex-end; row-gap: 8px; }
-  .navbar .lang-switch { margin-left: 0; }
+  .navbar__links { flex-wrap: wrap; justify-content: flex-end; }
+  .navbar__links > * { margin-top: 4px; margin-bottom: 4px; } /* odstęp między wierszami, gdy menu się łamie */
+  .navbar .lang-switch { margin-left: var(--space-sm); }
 }
 
 /* --- starsze przeglądarki (np. Safari sprzed 2023): kropka komentarza i kolor
@@ -875,3 +881,12 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 @media (max-width: 720px) { .bio-more, .work__comment .bio-more { font-size: 240px; } }
 .bio-quote { color: var(--accent); }
 .bio-quote { color: color-mix(in srgb, var(--accent) 80%, #000); }
+
+/* --- starsze przeglądarki bez "aspect-ratio" (np. przeglądarka w czytnikach Boox):
+       okno filmu dostaje wysokość z marginesu wewnętrznego, puste kafelki stałą wysokość --- */
+@supports not (aspect-ratio: 16 / 9) {
+  .work__video { height: 0; padding-top: 56.25%; }
+  .work__video--ratio { padding-top: calc(100% / var(--video-ratio)); }
+  .work__video--file { height: auto; padding-top: 0; }
+  .tile--soon .tile__imgwrap, .tile__imgwrap--empty { padding-top: var(--space-xl); padding-bottom: var(--space-xl); }
+}
