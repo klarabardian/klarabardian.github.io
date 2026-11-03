@@ -430,7 +430,7 @@ function initWorkPage() {
   const id = new URLSearchParams(location.search).get("id");
   // przeszukaj wszystkie listy prac
   const all = [].concat(ARTWORKS, VIDEOS, GAMES);
-  const work = all.find((w) => w.id === id);
+  const work = all.find((w) => w.id === id || w.oldId === id);
 
   const root = document.getElementById("work-root");
   if (!work || work.placeholder) {

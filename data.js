@@ -190,7 +190,7 @@ const ARTWORKS = [
   {
     id: "co-sie-dzieje-w-lazience",
     tags: ["av", "performance"],
-    image: { src: "assets/works/co-sie-dzieje-w-lazience.jpg", photo: "Marta Żurkiewicz" },
+    image: { src: "assets/works/co-sie-dzieje-w-lazience.jpg", photo: "Marta Krukow" },
     title: { en: "what happens in the bathroom", pl: "co się dzieje w łazience" },
     kind: { en: "audiovisual event", pl: "wydarzenie audiowizualne" },
     year: "2025",
@@ -240,15 +240,16 @@ const ARTWORKS = [
     layout: ["title", "meta", "video", "desc", "gallery"], // główne zdjęcie to podgląd filmu, na całą szerokość
   },
   {
-    id: "martusia-na-walach",
+    id: "in-the-secret-garden",
+    oldId: "martusia-na-walach", // dawny adres podstrony (stare linki nadal działają)
     tags: ["performance"],
-    image: { src: "assets/works/martusia-na-walach.jpg", photo: "Marta Żurkiewicz" },
+    image: { src: "assets/works/martusia-na-walach.jpg", photo: "Marta Krukow" },
     title: { en: "in the secret garden", pl: "in the secret garden" },
     kind: { en: "in front of the lens", pl: "przed obiektywem" },
     year: "2024",
     desc: {
-      en: "A session created by Marta Żurkiewicz.",
-      pl: "Sesja stworzona przez Martę Żurkiewicz.",
+      en: "A session created by Marta Krukow.",
+      pl: "Sesja stworzona przez Martę Krukow.",
     },
     comment: {
       en: "There are sessions in which I feel I have a real influence on what gets created. This was a meeting in which I felt I wanted to expose my freedom in this wild garden.",
@@ -256,15 +257,15 @@ const ARTWORKS = [
     },
     heroInGallery: true, // pierwsze zdjęcie w galerii razem z małymi (bez osobnego dużego u góry)
     gallery: [
-      { src: "assets/works/martusia-na-walach-2.jpg", photo: "Marta Żurkiewicz" },
-      { src: "assets/works/martusia-na-walach-4.jpg", photo: "Marta Żurkiewicz" },
-      { src: "assets/works/martusia-na-walach-6.jpg", photo: "Marta Żurkiewicz" },
-      { src: "assets/works/martusia-na-walach-7.jpg", photo: "Marta Żurkiewicz" },
-      { src: "assets/works/martusia-na-walach-8.jpg", photo: "Marta Żurkiewicz" },
-      { src: "assets/works/martusia-na-walach-9.jpg", photo: "Marta Żurkiewicz" },
-      { src: "assets/works/martusia-na-walach-10.jpg", photo: "Marta Żurkiewicz" },
-      { src: "assets/works/martusia-na-walach-11.jpg", photo: "Marta Żurkiewicz" },
-      { src: "assets/works/martusia-na-walach-12.jpg", photo: "Marta Żurkiewicz" },
+      { src: "assets/works/martusia-na-walach-2.jpg", photo: "Marta Krukow" },
+      { src: "assets/works/martusia-na-walach-4.jpg", photo: "Marta Krukow" },
+      { src: "assets/works/martusia-na-walach-6.jpg", photo: "Marta Krukow" },
+      { src: "assets/works/martusia-na-walach-7.jpg", photo: "Marta Krukow" },
+      { src: "assets/works/martusia-na-walach-8.jpg", photo: "Marta Krukow" },
+      { src: "assets/works/martusia-na-walach-9.jpg", photo: "Marta Krukow" },
+      { src: "assets/works/martusia-na-walach-10.jpg", photo: "Marta Krukow" },
+      { src: "assets/works/martusia-na-walach-11.jpg", photo: "Marta Krukow" },
+      { src: "assets/works/martusia-na-walach-12.jpg", photo: "Marta Krukow" },
     ],
     youtube: "",
   },
@@ -285,7 +286,8 @@ const ARTWORKS = [
     youtube: "HEyZBspXOKg", // fragment audio
   },
   {
-    id: "co-trudno-ci-powiedziec",
+    id: "co-trudno-ci-powiedziec-drugiej-osobie",
+    oldId: "co-trudno-ci-powiedziec", // dawny adres podstrony (stare linki nadal działają)
     tags: ["object"],
     title: { en: "What is difficult for you to say to another person?", pl: "Co trudno Ci powiedzieć drugiej osobie?" },
     kind: { en: "interactive project, stickers", pl: "projekt interaktywny, wlepy" },
@@ -365,7 +367,8 @@ const ARTWORKS = [
     youtube: "",
   },
   {
-    id: "snilo-mi-sie-ryba",
+    id: "snilo-mi-sie-ze-jestem-ryba-i-mnie-dotykasz",
+    oldId: "snilo-mi-sie-ryba", // dawny adres podstrony (stare linki nadal działają)
     tags: ["av"],
     image: { src: "assets/works/ryba.jpg", photo: "Marcin Rupociński" },
     title: { en: "I had a dream that I am a fish and you are touching me", pl: "śniło mi się że jestem rybą i mnie dotykasz" },
@@ -385,7 +388,8 @@ const ARTWORKS = [
     youtube: "91Vmo2F2skc",
   },
   {
-    id: "ostatnio-malo-mowie",
+    id: "ostatnio-malo-mowie-i-troche-plyne",
+    oldId: "ostatnio-malo-mowie", // dawny adres podstrony (stare linki nadal działają)
     tags: ["photo"],
     image: "assets/works/plyne.jpg",
     title: { en: "I don't say much and I float a lot", pl: "ostatnio mało mówię i trochę płynę" },
@@ -397,7 +401,8 @@ const ARTWORKS = [
     youtube: "",
   },
   {
-    id: "powiedzialam-nie-jestem-pewna",
+    id: "powiedzialam-ze-nie-jestem-pewna",
+    oldId: "powiedzialam-nie-jestem-pewna", // dawny adres podstrony (stare linki nadal działają)
     tags: ["photo"],
     image: "assets/works/niepewna.jpg",
     title: { en: "I said I'm not sure", pl: "powiedziałam, że nie jestem pewna" },
@@ -493,7 +498,8 @@ const ARTWORKS = [
     youtube: "",
   },
   {
-    id: "dotarcie-swiadomosci",
+    id: "dotarcie",
+    oldId: "dotarcie-swiadomosci", // dawny adres podstrony (stare linki nadal działają)
     tags: ["photo"],
     image: "assets/works/dotarcie-swiadomosci-7.jpg", // okładka
     title: { en: "reaching", pl: "dotarcie" },
@@ -508,7 +514,8 @@ const ARTWORKS = [
     youtube: "",
   },
   {
-    id: "fotografie-2020",
+    id: "cwiczenia",
+    oldId: "fotografie-2020", // dawny adres podstrony (stare linki nadal działają)
     tags: ["photo"],
     image: "assets/works/fotografie-2020.jpg",
     title: { en: "exercises", pl: "ćwiczenia" },
@@ -651,7 +658,8 @@ const VIDEOS = [
     youtube: "AyBMDP0zNLU",
   },
   {
-    id: "spektrum",
+    id: "swidnica-spektrum",
+    oldId: "spektrum", // dawny adres podstrony (stare linki nadal działają)
     image: "assets/works/spektrum-cover.jpg",
     title: { en: "Świdnica/Spektrum", pl: "Świdnica/Spektrum" },
     kind: "9’23’’",
@@ -776,7 +784,8 @@ const GAMES = [
     youtube: "",
   },
   {
-    id: "utopce-z-myslowic",
+    id: "utopce-z-myslowic-i-skarb-rozbojnikow",
+    oldId: "utopce-z-myslowic", // dawny adres podstrony (stare linki nadal działają)
     image: "assets/works/utopce-z-myslowic.jpg",
     title: { en: "The Utopce of Mysłowice and the Robbers’ Treasure", pl: "Utopce z Mysłowic i skarb rozbójników" },
     kind: { en: "large-format board game", pl: "gra wielkoformatowa" },
@@ -858,7 +867,8 @@ const GAMES = [
     youtube: "",
   },
   {
-    id: "archiwum-czasu",
+    id: "archiwum-czasu-zjednoczenie-krasnoludkow-bibliotecznych",
+    oldId: "archiwum-czasu", // dawny adres podstrony (stare linki nadal działają)
     image: "assets/works/archiwum-czasu.jpg",
     title: { en: "Time Archive. The Library Gnomes United", pl: "Archiwum Czasu. Zjednoczenie Krasnoludków Bibliotecznych" },
     kind: { en: "large-format board game", pl: "gra wielkoformatowa" },
